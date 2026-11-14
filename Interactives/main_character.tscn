@@ -1,7 +1,7 @@
 [gd_scene load_steps=4 format=3 uid="uid://c4yfycpol177w"]
 
 [ext_resource type="Texture2D" uid="uid://cmdpmvwgvd2am" path="res://icon.svg" id="1_3jigc"]
-[ext_resource type="Script" uid="uid://cu4myek51rsw0" path="res://Interactives/main_character.gd" id="1_w80yn"]
+[ext_resource type="Script" uid="uid://cu4myek51rsw0" path="res://Scripts/main_character.gd" id="1_w80yn"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_w80yn"]
 radius = 63.03174
@@ -15,3 +15,5 @@ shape = SubResource("CircleShape2D_w80yn")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 texture = ExtResource("1_3jigc")
+
+[node name="Camera2D" type="Camera2D" parent="."]

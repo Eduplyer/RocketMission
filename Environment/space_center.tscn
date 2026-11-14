@@ -1,3 +1,13 @@
-[gd_scene format=3 uid="uid://cjeguv1crf7ol"]
+[gd_scene load_steps=3 format=3 uid="uid://cjeguv1crf7ol"]
+
+[ext_resource type="PackedScene" uid="uid://c4yfycpol177w" path="res://Interactives/main_character.tscn" id="1_ddsps"]
+[ext_resource type="Texture2D" uid="uid://cmdpmvwgvd2am" path="res://icon.svg" id="2_0lguc"]
 
 [node name="SpaceCenter" type="Node2D"]
+
+[node name="MainCharacter" parent="." instance=ExtResource("1_ddsps")]
+
+[node name="Icon" type="Sprite2D" parent="."]
+modulate = Color(0, 0, 0, 1)
+position = Vector2(569, 276)
+texture = ExtResource("2_0lguc")
