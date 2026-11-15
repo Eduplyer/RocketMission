@@ -39,3 +39,8 @@ func obtener_datos_para_calculo() -> Dictionary:
 	save_data()
 	send_data.emit(player_data)
 	return player_data
+
+
+func _on_button_pressed() -> void:
+	obtener_datos_para_calculo()
+	hide()

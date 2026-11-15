@@ -1,8 +1,12 @@
-[gd_scene load_steps=2 format=3 uid="uid://bpijyfxp1087s"]
+[gd_scene load_steps=3 format=3 uid="uid://bpijyfxp1087s"]
 
 [ext_resource type="PackedScene" uid="uid://bt3l75cgr6rg7" path="res://Screens/gmat.tscn" id="1_jf5eo"]
+[ext_resource type="PackedScene" uid="uid://d4jpbscp864x5" path="res://Interactives/book.tscn" id="2_vve12"]
 
 [node name="GUI" type="CanvasLayer"]
 
 [node name="GMAT" parent="." instance=ExtResource("1_jf5eo")]
+visible = false
+
+[node name="Book" parent="." instance=ExtResource("2_vve12")]
 visible = false

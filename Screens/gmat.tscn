@@ -65,3 +65,11 @@ horizontal_alignment = 1
 [node name="ValueCircularity" type="HSlider" parent="Panel/VBoxContainer"]
 custom_minimum_size = Vector2(300, 0)
 layout_mode = 2
+
+[node name="Button" type="Button" parent="Panel"]
+layout_mode = 0
+offset_right = 8.0
+offset_bottom = 8.0
+text = "SAVE and CLOSE"
+
+[connection signal="pressed" from="Panel/Button" to="." method="_on_button_pressed"]
