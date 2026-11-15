@@ -1,0 +1,251 @@
+{
+  "meta": {
+	"version": 1,
+	"modulo": "potencia",
+	"moneda": "credits",
+	"unidad_masa_kg": 5,
+	"convenciones": {
+	  "watts": "positive = generates power, negative = consumes power",
+	  "capacidad_wh": "batteries only (energy storage in watt-hours); 0 for everything else",
+	  "slots": "fairing slots: how much space the part takes inside the rocket's payload fairing",
+	  "calor": "heat the part gives off, scale 0-10 (low=2, medium=4, high=7, extreme=10; 0 = none)",
+	  "requiere": "ALL ids in the list must be on the ship",
+	  "requiere_alguno_de": "at least ONE id in the list must be on the ship",
+	  "incompatible": "the listed ids cannot be combined with this part",
+	  "sinergia": "ids of parts or mission-objective tags (e.g. mapeo_orbital) that give a bonus",
+	  "vulnerable_a": "ids of events that damage the part (see eventos_sugeridos)",
+	  "penalizaciones": "list of rules. {si_falta: id} or {si_falta_ninguno_de: [ids]}; if the condition is not met, 'efecto' applies",
+	  "ids": "lowercase, no accents, underscores. Must match the key. Must be identical across all team files",
+	  "tags": "capabilities of the part. A mission can require a tag (any part with it will do) or a specific id",
+	  "alcance_ua_max": "optional (antennas): maximum communication distance in astronomical units (AU)",
+	  "solo_mision": "optional: 'humana' (crewed) or 'robotica' (robotic). The part only applies to that mission type",
+	  "requiere_aterrizaje": "optional: true = only works if the mission includes a landing (aterrizaje=true in missions.json)",
+	  "mitiga": "optional: ids of events whose damage the part reduces or cancels",
+	  "ciencia_base": "optional (instruments): science points per use turn. Game value",
+	  "capacidad_slots": "fairings only: slots offered",
+	  "aporta_capacidad_masa": "engines and boosters only: adds to lift capacity (game units)",
+	  "ajuste_capacidad_masa": "modifier (+/-) to lift capacity",
+	  "masa_cuenta_como_carga": "if false, its mass does not count as load to lift (default true)",
+	  "fiabilidad": "probability of working (0 to 1)",
+	  "genera_evento": "event the part triggers",
+	  "isp_vacio_real_s": "real specific impulse in vacuum (s); informational only",
+	  "resumen": "short one-line text shown in the hover tooltip"
+	},
+	"eventos_sugeridos": [
+	  "cme",
+	  "erupcion_solar",
+	  "ips",
+	  "meteoritos",
+	  "radiacion",
+	  "sep",
+	  "tormenta_geomagnetica",
+      "vibracion_lanzamiento"
+	],
+	"regla_distancia_solar": "real_power = watts * (1 / distance_in_AU^2). Mars (~1.5 AU) gets about 43% of Earth's sunlight, Jupiter (~5.2 AU) about 4%. Only applies to parts with depende_del_sol = true.",
+	"fuentes": [
+	  "https://www.nasa.gov/smallsat-institute/sst-soa/power-subsystems",
+	  "https://www.jpl.nasa.gov/news/press_kits/mars_2020/launch/mission/spacecraft/power/",
+	  "https://www.nasa.gov/sites/default/files/files/4_Mars_2020_MMRTG.pdf",
+	  "https://www.nasa.gov/missions/station/iss-research/power-up-roll-out-solar-arrays-boost-space-station-power-supply/",
+      "https://ntrs.nasa.gov/api/citations/20030006444/downloads/20030006444.pdf"
+	],
+	"ids_pendientes": [],
+	"idioma": "en"
+  },
+  "partes": {
+	"panel_fijo": {
+	  "nombre": "Fixed solar panel (body-mounted)",
+	  "categoria": "potencia",
+	  "subcategoria": "panel_solar",
+	  "descripcion": "Solar cells attached directly to the spacecraft's outer shell. They turn sunlight into electricity. They are cheap and have no moving parts to deploy, so they cannot jam, but only the faces pointing at the Sun produce power.",
+	  "resumen": "Cells on the hull. Cheap, nothing to deploy.",
+	  "precio_juego": 50000,
+	  "precio_real_ref": "Space solar arrays typically cost 75-250 USD per watt (industry, 2025); about 1,650 USD per watt including deployment mechanisms (NASA Goddard study, older dollars)",
+	  "masa": 1,
+	  "masa_real_ref": "1-2 kg (team data, unverified)",
+	  "watts": 50,
+	  "capacidad_wh": 0,
+	  "slots": 0,
+	  "calor": 2,
+	  "trl": 9,
+	  "depende_del_sol": true,
+	  "degradacion_anual_pct": 2,
+	  "requiere": [],
+	  "requiere_alguno_de": [],
+	  "incompatible": [],
+	  "sinergia": [
+		"rueda_reaccion",
+        "propulsor_rcs"
+	  ],
+	  "vulnerable_a": [],
+	  "penalizaciones": [],
+	  "efecto_juego": "Slowly raises the Energy bar. The ship should rotate so every face gets some sunlight.",
+	  "notas": "Raised from 20 W to 50 W so it can power a minimal spacecraft. Adjust to your power balance. The degradation rate is a game value.",
+	  "id": "panel_fijo",
+	  "tags": [
+		"genera_energia",
+        "energia_solar"
+	  ]
+	},
+	"panel_desplegable": {
+	  "nombre": "Deployable solar array",
+	  "categoria": "potencia",
+	  "subcategoria": "panel_solar",
+	  "descripcion": "Folded solar wings that unfold once in orbit, exposing far more cell area than the ship's body could hold. Motors turn the wings to follow the Sun and collect as much light as possible.",
+	  "resumen": "Folding wings that track the Sun.",
+	  "precio_juego": 250000,
+	  "precio_real_ref": "Space solar arrays typically cost 75-250 USD per watt (industry, 2025); about 1,650 USD per watt including deployment mechanisms (NASA Goddard study, older dollars)",
+	  "masa": 3,
+	  "masa_real_ref": "About 10 kg (team data, unverified)",
+	  "watts": 150,
+	  "capacidad_wh": 0,
+	  "slots": 1,
+	  "calor": 4,
+	  "trl": 9,
+	  "depende_del_sol": true,
+	  "degradacion_anual_pct": 2,
+	  "requiere": [
+        "cofia_expandida"
+	  ],
+	  "requiere_alguno_de": [],
+	  "incompatible": [],
+	  "sinergia": [
+        "radar_sar"
+	  ],
+	  "vulnerable_a": [
+        "meteoritos"
+	  ],
+	  "penalizaciones": [],
+	  "efecto_juego": "Produces a lot of Energy, but each meteor shower permanently lowers its efficiency.",
+	  "notas": "The id cofia_expandida must exist in the rocket file.",
+	  "id": "panel_desplegable",
+	  "tags": [
+		"genera_energia",
+        "energia_solar"
+	  ]
+	},
+	"panel_rosa": {
+	  "nombre": "Roll-out solar array (ROSA)",
+	  "categoria": "potencia",
+	  "subcategoria": "panel_solar",
+	  "descripcion": "An ultralight solar blanket that unrolls like a window blind. It offers a huge collecting area for very little mass. It has flown on the International Space Station and on NASA's DART mission.",
+	  "resumen": "Roll-out panel: lots of power, little mass.",
+	  "precio_juego": 800000,
+	  "precio_real_ref": "No public price; space solar arrays typically cost 75-250 USD per watt",
+	  "masa": 2,
+	  "masa_real_ref": "100-120 W per kg according to Redwire; each iROSA on the ISS delivers more than 28 kW",
+	  "watts": 400,
+	  "capacidad_wh": 0,
+	  "slots": 1,
+	  "calor": 4,
+	  "trl": 9,
+	  "depende_del_sol": true,
+	  "degradacion_anual_pct": 2,
+	  "requiere": [],
+	  "requiere_alguno_de": [],
+	  "incompatible": [],
+	  "sinergia": [
+		"propulsion_electrica",
+        "radar_sar"
+	  ],
+	  "vulnerable_a": [],
+	  "penalizaciones": [],
+	  "efecto_juego": "Fills the Energy bar very fast, but its high cost eats into the remaining budget.",
+	  "notas": "TRL corrected from 8 to 9: it already flies on the International Space Station. (TRL = Technology Readiness Level; 9 means proven in real missions.)",
+	  "id": "panel_rosa",
+	  "tags": [
+		"genera_energia",
+        "energia_solar"
+	  ]
+	},
+	"bateria_ion_litio": {
+	  "nombre": "Lithium-ion battery",
+	  "categoria": "potencia",
+	  "subcategoria": "bateria",
+	  "descripcion": "Stores electricity from the solar panels so the ship stays alive when it passes through a planet's shadow (an eclipse), when the panels receive no sunlight.",
+	  "resumen": "Stores power for eclipses.",
+	  "precio_juego": 100000,
+	  "precio_real_ref": "No reliable price data found",
+	  "masa": 2,
+	  "masa_real_ref": "500 Wh at up to 265 Wh/kg means at least about 1.9 kg (NASA S3VI)",
+	  "watts": 0,
+	  "capacidad_wh": 500,
+	  "slots": 1,
+	  "calor": 7,
+	  "trl": 9,
+	  "depende_del_sol": false,
+	  "degradacion_anual_pct": 0,
+	  "requiere": [],
+	  "requiere_alguno_de": [
+		"panel_fijo",
+		"panel_desplegable",
+        "panel_rosa"
+	  ],
+	  "incompatible": [],
+	  "sinergia": [
+		"radiador_pasivo",
+        "calentador_electrico"
+	  ],
+	  "vulnerable_a": [],
+	  "penalizaciones": [
+		{
+		  "si_falta": "radiador_pasivo",
+		  "efecto": "vida_util_reducida"
+		},
+		{
+		  "si_falta": "calentador_electrico",
+		  "efecto": "riesgo_por_frio_en_eclipse"
+		}
+	  ],
+	  "efecto_juego": "Provides survival turns during an eclipse. It heats up while charging.",
+	  "notas": "Recharges only from solar panels. It performs poorly in the cold, which is why it pairs with the heater.",
+	  "id": "bateria_ion_litio",
+	  "tags": [
+		"almacena_energia",
+        "sobrevive_eclipse"
+	  ]
+	},
+	"rtg_mmrtg": {
+	  "nombre": "Radioisotope thermoelectric generator (RTG)",
+	  "categoria": "potencia",
+	  "subcategoria": "generador",
+	  "descripcion": "A nuclear battery with no moving parts. The natural radioactive decay of plutonium-238 produces heat, and thermocouples turn part of that heat into electricity. It works in darkness and far from the Sun. It powers the Curiosity and Perseverance rovers.",
+	  "resumen": "Nuclear battery: power day and night.",
+	  "precio_juego": 20000000,
+	  "precio_real_ref": "No official price; the fuel alone (about 3.5 kg of plutonium-238 at over 3 million USD per kg) is roughly 10 million USD",
+	  "masa": 10,
+	  "masa_real_ref": "43.6 kg (NASA/DOE)",
+	  "watts": 110,
+	  "capacidad_wh": 0,
+	  "slots": 2,
+	  "calor": 10,
+	  "trl": 9,
+	  "depende_del_sol": false,
+	  "degradacion_anual_pct": 4,
+	  "requiere": [],
+	  "requiere_alguno_de": [],
+	  "incompatible": [
+		"panel_fijo",
+		"panel_desplegable",
+        "panel_rosa"
+	  ],
+	  "sinergia": [
+        "radiador_pasivo"
+	  ],
+	  "vulnerable_a": [],
+	  "penalizaciones": [
+		{
+		  "si_falta": "radiador_pasivo",
+		  "efecto": "sobrecalentamiento"
+		}
+	  ],
+	  "efecto_juego": "Constant power day and night. The Temperature bar stays high, so it demands good thermal control.",
+	  "notas": "Price raised from 5 M to 20 M (proposal). It gives off about 2,000 W of heat to deliver 110 W of electricity. NASA reports its output falls by a few percent per year. Far from the Sun, that waste heat helps keep the ship warm.",
+	  "id": "rtg_mmrtg",
+	  "tags": [
+		"genera_energia",
+        "energia_sin_sol"
+	  ]
+	}
+  }
+}

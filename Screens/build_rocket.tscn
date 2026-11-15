@@ -1,0 +1,250 @@
+[gd_scene load_steps=4 format=3 uid="uid://dpng0frv0a105"]
+
+[ext_resource type="Script" uid="uid://vnr83jsoakxw" path="res://Screens/build_rocket.gd" id="1_0u5ge"]
+[ext_resource type="Texture2D" uid="uid://dsq14nw0dnh5r" path="res://Assets/cohete.png" id="2_iol0s"]
+[ext_resource type="FontFile" uid="uid://cw0vs6wx5rdr" path="res://Assets/Kenney Pixel.ttf" id="3_iol0s"]
+
+[node name="UI_Ensamblaje" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_0u5ge")
+
+[node name="Panel" type="Panel" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_default_cursor_shape = 2
+
+[node name="ColorRect" type="ColorRect" parent="Panel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="LabelResumen" type="Label" parent="Panel/ColorRect"]
+layout_mode = 0
+offset_left = 25.0
+offset_top = 6.0
+offset_right = 282.0
+offset_bottom = 36.0
+
+[node name="PanelNave" type="Panel" parent="Panel"]
+custom_minimum_size = Vector2(80, 80)
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.18300001
+anchor_top = 0.446
+anchor_right = 0.18300001
+anchor_bottom = 0.446
+offset_left = -42.560005
+offset_top = -55.28
+offset_right = 47.439995
+offset_bottom = 57.72
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="TextureRect" type="TextureRect" parent="Panel/PanelNave"]
+texture_filter = 1
+layout_mode = 0
+offset_left = 11.0
+offset_top = 20.0
+offset_right = 74.0
+offset_bottom = 89.0
+texture = ExtResource("2_iol0s")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+custom_minimum_size = Vector2(20, 20)
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -132.0
+offset_top = 2.0
+offset_right = 117.5
+offset_bottom = 22.0
+grow_horizontal = 2
+
+[node name="PanelPersonaliza" type="Panel" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -33.0
+offset_top = -66.0
+offset_right = 124.0
+offset_bottom = 51.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Label" type="Label" parent="PanelPersonaliza"]
+texture_filter = 1
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -27.5
+offset_top = 6.0
+offset_right = 33.0
+offset_bottom = 17.0
+grow_horizontal = 2
+theme_override_fonts/font = ExtResource("3_iol0s")
+theme_override_font_sizes/font_size = 12
+text = "CUSTOMIZE"
+horizontal_alignment = 1
+
+[node name="GridPiezas" type="GridContainer" parent="PanelPersonaliza"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 33.0
+offset_top = 38.0
+offset_right = -42.0
+offset_bottom = -30.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/h_separation = 8
+theme_override_constants/v_separation = 8
+columns = 4
+
+[node name="Panel1" type="Button" parent="PanelPersonaliza/GridPiezas"]
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
+
+[node name="Panel2" type="Button" parent="PanelPersonaliza/GridPiezas"]
+layout_mode = 2
+
+[node name="Panel3" type="Button" parent="PanelPersonaliza/GridPiezas"]
+layout_mode = 2
+
+[node name="Panel4" type="Button" parent="PanelPersonaliza/GridPiezas"]
+layout_mode = 2
+
+[node name="Panel5" type="Button" parent="PanelPersonaliza/GridPiezas"]
+layout_mode = 2
+
+[node name="Panel6" type="Button" parent="PanelPersonaliza/GridPiezas"]
+layout_mode = 2
+
+[node name="Panel7" type="Button" parent="PanelPersonaliza/GridPiezas"]
+layout_mode = 2
+
+[node name="Panel8" type="Button" parent="PanelPersonaliza/GridPiezas"]
+layout_mode = 2
+
+[node name="Button" type="Button" parent="PanelPersonaliza"]
+texture_filter = 1
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -38.0
+offset_top = -20.0
+offset_right = -7.0
+offset_bottom = -6.0
+grow_horizontal = 0
+grow_vertical = 0
+theme_override_fonts/font = ExtResource("3_iol0s")
+theme_override_font_sizes/font_size = 7
+text = "Construir"
+
+[node name="Pestanas" type="VBoxContainer" parent="."]
+custom_minimum_size = Vector2(5, 20)
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.984
+anchor_top = 0.5
+anchor_right = 0.984
+anchor_bottom = 0.5
+offset_left = -31.880005
+offset_top = -63.0
+offset_right = -18.880005
+offset_bottom = 23.0
+grow_horizontal = 0
+grow_vertical = 2
+
+[node name="Button" type="Button" parent="Pestanas"]
+layout_mode = 2
+
+[node name="ColorRect" type="ColorRect" parent="Pestanas/Button"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(1, 0.7411765, 1, 1)
+
+[node name="Button2" type="Button" parent="Pestanas"]
+layout_mode = 2
+
+[node name="ColorRect" type="ColorRect" parent="Pestanas/Button2"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.74786353, 0.8650483, 0.92365086, 1)
+
+[node name="Button3" type="Button" parent="Pestanas"]
+layout_mode = 2
+
+[node name="ColorRect" type="ColorRect" parent="Pestanas/Button3"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.86107796, 0.8696743, 0.53175795, 1)
+
+[node name="Button4" type="Button" parent="Pestanas"]
+layout_mode = 2
+
+[node name="ColorRect" type="ColorRect" parent="Pestanas/Button4"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.8725555, 0.6500533, 0.6003453, 1)
+
+[node name="Button5" type="Button" parent="Pestanas"]
+layout_mode = 2
+
+[node name="ColorRect" type="ColorRect" parent="Pestanas/Button5"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.46300328, 0.792175, 0.63783395, 1)
+
+[node name="Button6" type="Button" parent="Pestanas"]
+layout_mode = 2
+
+[node name="ColorRect" type="ColorRect" parent="Pestanas/Button6"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.6610131, 0.82215124, 0.88879955, 1)

@@ -1,0 +1,139 @@
+{
+  "meta": {
+	"version": 1,
+	"modulo": "comunicaciones",
+	"moneda": "credits",
+	"unidad_masa_kg": 5,
+	"convenciones": {
+	  "watts": "positive = generates power, negative = consumes power",
+	  "capacidad_wh": "batteries only (energy storage in watt-hours); 0 for everything else",
+	  "slots": "fairing slots: how much space the part takes inside the rocket's payload fairing",
+	  "calor": "heat the part gives off, scale 0-10 (low=2, medium=4, high=7, extreme=10; 0 = none)",
+	  "requiere": "ALL ids in the list must be on the ship",
+	  "requiere_alguno_de": "at least ONE id in the list must be on the ship",
+	  "incompatible": "the listed ids cannot be combined with this part",
+	  "sinergia": "ids of parts or mission-objective tags (e.g. mapeo_orbital) that give a bonus",
+	  "vulnerable_a": "ids of events that damage the part (see eventos_sugeridos)",
+	  "penalizaciones": "list of rules. {si_falta: id} or {si_falta_ninguno_de: [ids]}; if the condition is not met, 'efecto' applies",
+	  "ids": "lowercase, no accents, underscores. Must match the key. Must be identical across all team files",
+	  "tags": "capabilities of the part. A mission can require a tag (any part with it will do) or a specific id",
+	  "alcance_ua_max": "optional (antennas): maximum communication distance in astronomical units (AU)",
+	  "solo_mision": "optional: 'humana' (crewed) or 'robotica' (robotic). The part only applies to that mission type",
+	  "requiere_aterrizaje": "optional: true = only works if the mission includes a landing (aterrizaje=true in missions.json)",
+	  "mitiga": "optional: ids of events whose damage the part reduces or cancels",
+	  "ciencia_base": "optional (instruments): science points per use turn. Game value",
+	  "capacidad_slots": "fairings only: slots offered",
+	  "aporta_capacidad_masa": "engines and boosters only: adds to lift capacity (game units)",
+	  "ajuste_capacidad_masa": "modifier (+/-) to lift capacity",
+	  "masa_cuenta_como_carga": "if false, its mass does not count as load to lift (default true)",
+	  "fiabilidad": "probability of working (0 to 1)",
+	  "genera_evento": "event the part triggers",
+	  "isp_vacio_real_s": "real specific impulse in vacuum (s); informational only",
+	  "resumen": "short one-line text shown in the hover tooltip"
+	},
+	"eventos_sugeridos": [
+	  "cme",
+	  "erupcion_solar",
+	  "ips",
+	  "meteoritos",
+	  "radiacion",
+	  "sep",
+	  "tormenta_geomagnetica",
+      "vibracion_lanzamiento"
+	],
+	"regla_distancia_solar": "real_power = watts * (1 / distance_in_AU^2). Mars (~1.5 AU) gets about 43% of Earth's sunlight, Jupiter (~5.2 AU) about 4%. Only applies to parts with depende_del_sol = true.",
+	"fuentes": [
+	  "https://www.nasa.gov/smallsat-institute/sst-soa/power-subsystems",
+	  "https://www.jpl.nasa.gov/news/press_kits/mars_2020/launch/mission/spacecraft/power/",
+	  "https://www.nasa.gov/sites/default/files/files/4_Mars_2020_MMRTG.pdf",
+	  "https://www.nasa.gov/missions/station/iss-research/power-up-roll-out-solar-arrays-boost-space-station-power-supply/",
+      "https://ntrs.nasa.gov/api/citations/20030006444/downloads/20030006444.pdf"
+	],
+	"supuestos": [
+	  "Heat level of the LGA and HGA was not in the original table: assumed 2 and 4.",
+	  "The transmitters from the initial list were not in the final table, so they were not included.",
+      "The rule 'LGA incompatible with deep space' became alcance_ua_max (a range limit in astronomical units)."
+	],
+	"ids_pendientes": [],
+	"idioma": "en"
+  },
+  "partes": {
+	"antena_baja_ganancia": {
+	  "id": "antena_baja_ganancia",
+	  "nombre": "Low-gain antenna (LGA)",
+	  "categoria": "comunicaciones",
+	  "subcategoria": "antena",
+	  "descripcion": "A small antenna that sends and receives in almost every direction, so it needs no precise aiming. It carries little data but is simple and reliable.",
+	  "resumen": "Simple short-range antenna (up to the Moon).",
+	  "precio_juego": 30000,
+	  "precio_real_ref": "No reliable price data found",
+	  "masa": 1,
+	  "masa_real_ref": "No verified data",
+	  "watts": -5,
+	  "capacidad_wh": 0,
+	  "slots": 0,
+	  "calor": 2,
+	  "trl": 9,
+	  "tags": [
+		"comunica",
+		"comunicacion_cercana",
+        "comunicacion_respaldo"
+	  ],
+	  "depende_del_sol": false,
+	  "degradacion_anual_pct": 0,
+	  "requiere": [],
+	  "requiere_alguno_de": [],
+	  "incompatible": [],
+	  "sinergia": [],
+	  "vulnerable_a": [
+        "tormenta_geomagnetica"
+	  ],
+	  "penalizaciones": [],
+	  "efecto_juego": "Works for Earth and lunar orbit. Low data rate; serves as a backup link.",
+	  "notas": "alcance_ua_max of 0.005 AU (about 750,000 km) is a game value: it covers the Moon (0.0026 AU) but not the Sun-Earth L1 point (0.01 AU). Heat level assumed.",
+	  "alcance_ua_max": 0.005
+	},
+	"antena_alta_ganancia": {
+	  "id": "antena_alta_ganancia",
+	  "nombre": "High-gain antenna (HGA)",
+	  "categoria": "comunicaciones",
+	  "subcategoria": "antena",
+	  "descripcion": "A large dish that focuses its signal into a narrow beam, like a flashlight instead of a bare bulb. It can send a lot of data across vast distances, but it must point exactly at Earth.",
+	  "resumen": "Dish for long-distance data. Must aim at Earth.",
+	  "precio_juego": 350000,
+	  "precio_real_ref": "No reliable price data found",
+	  "masa": 3,
+	  "masa_real_ref": "No verified data",
+	  "watts": -40,
+	  "capacidad_wh": 0,
+	  "slots": 1,
+	  "calor": 4,
+	  "trl": 9,
+	  "tags": [
+		"comunica",
+		"comunicacion_larga_distancia",
+        "alta_tasa_datos"
+	  ],
+	  "depende_del_sol": false,
+	  "degradacion_anual_pct": 0,
+	  "requiere": [
+        "sensor_estrellas"
+	  ],
+	  "requiere_alguno_de": [
+		"rueda_reaccion",
+        "propulsor_rcs"
+	  ],
+	  "incompatible": [],
+	  "sinergia": [
+        "rueda_reaccion"
+	  ],
+	  "vulnerable_a": [
+        "tormenta_geomagnetica"
+	  ],
+	  "penalizaciones": [],
+	  "efecto_juego": "High data rate over long distances, but if it does not point exactly at Earth the signal is lost.",
+	  "notas": "Heat level assumed. alcance_ua_max of 50 AU means no practical limit in the game.",
+	  "alcance_ua_max": 50
+	}
+  }
+}

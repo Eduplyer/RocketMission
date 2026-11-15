@@ -1,0 +1,259 @@
+{
+  "meta": {
+	"version": 1,
+	"modulo": "carga_util",
+	"moneda": "credits",
+	"unidad_masa_kg": 5,
+	"convenciones": {
+	  "watts": "positive = generates power, negative = consumes power",
+	  "capacidad_wh": "batteries only (energy storage in watt-hours); 0 for everything else",
+	  "slots": "fairing slots: how much space the part takes inside the rocket's payload fairing",
+	  "calor": "heat the part gives off, scale 0-10 (low=2, medium=4, high=7, extreme=10; 0 = none)",
+	  "requiere": "ALL ids in the list must be on the ship",
+	  "requiere_alguno_de": "at least ONE id in the list must be on the ship",
+	  "incompatible": "the listed ids cannot be combined with this part",
+	  "sinergia": "ids of parts or mission-objective tags (e.g. mapeo_orbital) that give a bonus",
+	  "vulnerable_a": "ids of events that damage the part (see eventos_sugeridos)",
+	  "penalizaciones": "list of rules. {si_falta: id} or {si_falta_ninguno_de: [ids]}; if the condition is not met, 'efecto' applies",
+	  "ids": "lowercase, no accents, underscores. Must match the key. Must be identical across all team files",
+	  "tags": "capabilities of the part. A mission can require a tag (any part with it will do) or a specific id",
+	  "alcance_ua_max": "optional (antennas): maximum communication distance in astronomical units (AU)",
+	  "solo_mision": "optional: 'humana' (crewed) or 'robotica' (robotic). The part only applies to that mission type",
+	  "requiere_aterrizaje": "optional: true = only works if the mission includes a landing (aterrizaje=true in missions.json)",
+	  "mitiga": "optional: ids of events whose damage the part reduces or cancels",
+	  "ciencia_base": "optional (instruments): science points per use turn. Game value",
+	  "capacidad_slots": "fairings only: slots offered",
+	  "aporta_capacidad_masa": "engines and boosters only: adds to lift capacity (game units)",
+	  "ajuste_capacidad_masa": "modifier (+/-) to lift capacity",
+	  "masa_cuenta_como_carga": "if false, its mass does not count as load to lift (default true)",
+	  "fiabilidad": "probability of working (0 to 1)",
+	  "genera_evento": "event the part triggers",
+	  "isp_vacio_real_s": "real specific impulse in vacuum (s); informational only",
+	  "resumen": "short one-line text shown in the hover tooltip"
+	},
+	"eventos_sugeridos": [
+	  "cme",
+	  "erupcion_solar",
+	  "ips",
+	  "meteoritos",
+	  "radiacion",
+	  "sep",
+	  "tormenta_geomagnetica",
+      "vibracion_lanzamiento"
+	],
+	"regla_distancia_solar": "real_power = watts * (1 / distance_in_AU^2). Mars (~1.5 AU) gets about 43% of Earth's sunlight, Jupiter (~5.2 AU) about 4%. Only applies to parts with depende_del_sol = true.",
+	"fuentes": [
+	  "https://www.nasa.gov/smallsat-institute/sst-soa/power-subsystems",
+	  "https://www.jpl.nasa.gov/news/press_kits/mars_2020/launch/mission/spacecraft/power/",
+	  "https://www.nasa.gov/sites/default/files/files/4_Mars_2020_MMRTG.pdf",
+	  "https://www.nasa.gov/missions/station/iss-research/power-up-roll-out-solar-arrays-boost-space-station-power-supply/",
+      "https://ntrs.nasa.gov/api/citations/20030006444/downloads/20030006444.pdf"
+	],
+	"supuestos": [
+	  "Data for thermal control, life support and payload comes from the team's table; it was not verified against NASA sources.",
+	  "Heat level: 0 for passive thermal parts; heater 2, scrubber 4, lighting 2 (assumed).",
+	  "Slots assumed: scrubber 1, water and food 2, shielding 1.",
+	  "ciencia_base values for instruments are game values (proposed).",
+      "TRL of MLI, radiator, heater and life support assumed to be 9."
+	],
+	"ids_pendientes": [],
+	"idioma": "en"
+  },
+  "partes": {
+	"camara_optica": {
+	  "id": "camara_optica",
+	  "nombre": "Optical camera",
+	  "categoria": "carga_util",
+	  "subcategoria": "imagen",
+	  "descripcion": "A lightweight instrument that photographs and maps surfaces in visible light, like a very precise camera on a satellite.",
+	  "resumen": "Photographs and maps surfaces.",
+	  "precio_juego": 150000,
+	  "precio_real_ref": "No reliable price data found",
+	  "masa": 1,
+	  "masa_real_ref": "No verified data",
+	  "watts": -10,
+	  "capacidad_wh": 0,
+	  "slots": 1,
+	  "calor": 2,
+	  "trl": 9,
+	  "tags": [
+		"observa_superficie",
+        "genera_ciencia"
+	  ],
+	  "depende_del_sol": false,
+	  "degradacion_anual_pct": 0,
+	  "requiere": [],
+	  "requiere_alguno_de": [
+		"rueda_reaccion",
+        "propulsor_rcs"
+	  ],
+	  "incompatible": [],
+	  "sinergia": [
+		"sensor_estrellas",
+		"rueda_reaccion",
+        "mapeo_orbital"
+	  ],
+	  "vulnerable_a": [
+        "vibracion_lanzamiento"
+	  ],
+	  "penalizaciones": [],
+	  "efecto_juego": "Steady, moderate science output when the ship is well oriented. Fragile during launch vibration.",
+	  "notas": "",
+	  "ciencia_base": 5
+	},
+	"espectrometro_masas": {
+	  "id": "espectrometro_masas",
+	  "nombre": "Mass spectrometer",
+	  "categoria": "carga_util",
+	  "subcategoria": "analisis",
+	  "descripcion": "Identifies the chemical makeup of atmospheres and surfaces by sorting molecules according to their mass.",
+	  "resumen": "Reveals what atmospheres and rocks are made of.",
+	  "precio_juego": 400000,
+	  "precio_real_ref": "No reliable price data found",
+	  "masa": 4,
+	  "masa_real_ref": "No verified data",
+	  "watts": -35,
+	  "capacidad_wh": 0,
+	  "slots": 2,
+	  "calor": 4,
+	  "trl": 8,
+	  "tags": [
+		"analiza_composicion",
+        "genera_ciencia"
+	  ],
+	  "depende_del_sol": false,
+	  "degradacion_anual_pct": 0,
+	  "requiere": [
+        "cofia_expandida"
+	  ],
+	  "requiere_alguno_de": [],
+	  "incompatible": [],
+	  "sinergia": [
+		"brazo_robotico",
+		"busqueda_recursos",
+        "analisis_atmosferico"
+	  ],
+	  "vulnerable_a": [],
+	  "penalizaciones": [],
+	  "efecto_juego": "Large science bonus on composition objectives. Its mass calls for a more powerful rocket.",
+	  "notas": "",
+	  "ciencia_base": 14
+	},
+	"radar_sar": {
+	  "id": "radar_sar",
+	  "nombre": "Synthetic aperture radar (SAR) / altimeter",
+	  "categoria": "carga_util",
+	  "subcategoria": "radar",
+	  "descripcion": "Sends radio pulses and listens to the echoes to measure terrain height, map the ground through thick clouds and even look beneath ice.",
+	  "resumen": "Maps terrain through clouds and ice. Power hungry.",
+	  "precio_juego": 900000,
+	  "precio_real_ref": "No reliable price data found",
+	  "masa": 8,
+	  "masa_real_ref": "No verified data",
+	  "watts": -120,
+	  "capacidad_wh": 0,
+	  "slots": 3,
+	  "calor": 7,
+	  "trl": 9,
+	  "tags": [
+		"mide_topografia",
+		"ve_bajo_nubes_o_hielo",
+        "genera_ciencia"
+	  ],
+	  "depende_del_sol": false,
+	  "degradacion_anual_pct": 0,
+	  "requiere": [],
+	  "requiere_alguno_de": [
+		"panel_rosa",
+		"panel_desplegable",
+        "rtg_mmrtg"
+	  ],
+	  "incompatible": [],
+	  "sinergia": [
+		"panel_rosa",
+		"panel_desplegable",
+		"radiador_pasivo",
+        "atmosfera_densa"
+	  ],
+	  "vulnerable_a": [],
+	  "penalizaciones": [
+		{
+		  "si_falta": "radiador_pasivo",
+		  "efecto": "sobrecalentamiento"
+		}
+	  ],
+	  "efecto_juego": "Massive science in hostile environments (dense atmospheres), but its power draw forces heavy investment in the power system.",
+	  "notas": "A lone RTG (110 W) cannot sustain 120 W: the ship's watt balance must stay at or above 0, or a battery must be added.",
+	  "ciencia_base": 20
+	},
+	"sismografo": {
+	  "id": "sismografo",
+	  "nombre": "Seismometer",
+	  "categoria": "carga_util",
+	  "subcategoria": "geofisica",
+	  "descripcion": "A very sensitive instrument that measures ground vibrations: quakes, moonquakes or meteorite impacts on a planetary surface.",
+	  "resumen": "Measures ground quakes (needs a landing).",
+	  "precio_juego": 300000,
+	  "precio_real_ref": "No reliable price data found",
+	  "masa": 2,
+	  "masa_real_ref": "No verified data",
+	  "watts": -5,
+	  "capacidad_wh": 0,
+	  "slots": 1,
+	  "calor": 2,
+	  "trl": 9,
+	  "tags": [
+		"mide_sismos",
+        "genera_ciencia"
+	  ],
+	  "depende_del_sol": false,
+	  "degradacion_anual_pct": 0,
+	  "requiere": [],
+	  "requiere_alguno_de": [],
+	  "incompatible": [],
+	  "sinergia": [],
+	  "vulnerable_a": [],
+	  "penalizaciones": [],
+	  "efecto_juego": "Continuous science data after a successful landing.",
+	  "notas": "Phase 2 if today's mission is orbit-only. Source cited by the team: Lunar Seismic Event Catalog (unverified).",
+	  "requiere_aterrizaje": true,
+	  "ciencia_base": 8
+	},
+	"brazo_robotico": {
+	  "id": "brazo_robotico",
+	  "nombre": "Robotic arm (sample collector)",
+	  "categoria": "carga_util",
+	  "subcategoria": "muestreo",
+	  "descripcion": "A mechanical manipulator for collecting samples, drilling into rock or interacting with the surroundings.",
+	  "resumen": "Collects surface samples (needs a landing).",
+	  "precio_juego": 600000,
+	  "precio_real_ref": "No reliable price data found",
+	  "masa": 6,
+	  "masa_real_ref": "No verified data",
+	  "watts": -25,
+	  "capacidad_wh": 0,
+	  "slots": 2,
+	  "calor": 2,
+	  "trl": 9,
+	  "tags": [
+		"toma_muestras",
+        "genera_ciencia"
+	  ],
+	  "depende_del_sol": false,
+	  "degradacion_anual_pct": 0,
+	  "requiere": [],
+	  "requiere_alguno_de": [],
+	  "incompatible": [],
+	  "sinergia": [
+		"espectrometro_masas",
+        "retorno_muestras"
+	  ],
+	  "vulnerable_a": [],
+	  "penalizaciones": [],
+	  "efecto_juego": "Essential for sample-return and advanced surface missions. Its mass makes the launcher more expensive.",
+	  "notas": "The -25 W is drawn only while the arm is in use. Phase 2 if the mission is orbit-only.",
+	  "requiere_aterrizaje": true,
+	  "ciencia_base": 10
+	}
+  }
+}
