@@ -1,5 +1,7 @@
 extends CharacterBody2D
-const SPEED = 300.0 # Para pixel art de 16x16, prueba valores entre 80.0 y 120.0 si lo sientes muy rápido
+
+
+const SPEED = 120
 var interactuable_actual: takelabel = null
 var ultima_direccion := "down"
 
@@ -22,8 +24,11 @@ func get_input() -> void:
 			ultima_direccion = "down" if direccion.y > 0 else "up"
 
 func actualizar_animacion() -> void:
-	var estado := "walk" if velocity != Vector2.ZERO else "idle"
-	var nombre_anim := "%s_%s" % [estado, ultima_direccion]
+	var nombre_anim := ""
+	if velocity != Vector2.ZERO:
+		nombre_anim = "idle_%s" % ultima_direccion
+	else:
+		nombre_anim = "idle_quiet"
 
 	if anim.sprite_frames and anim.sprite_frames.has_animation(nombre_anim):
 		if anim.animation != nombre_anim:

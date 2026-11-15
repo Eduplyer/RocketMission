@@ -115,7 +115,7 @@ z_index = 1
 shape = SubResource("CircleShape2D_w80yn")
 
 [node name="Sprite2D" type="AnimatedSprite2D" parent="."]
-scale = Vector2(0.2, 0.2)
+texture_filter = 1
 sprite_frames = SubResource("SpriteFrames_welyp")
 animation = &"idle_up"
 
