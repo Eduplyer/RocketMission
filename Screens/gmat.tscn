@@ -20,56 +20,65 @@ grow_horizontal = 2
 grow_vertical = 2
 
 [node name="VBoxContainer" type="VBoxContainer" parent="Panel"]
-custom_minimum_size = Vector2(500, 500)
+custom_minimum_size = Vector2(180, 20)
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -20.0
-offset_top = -20.0
-offset_right = 20.0
-offset_bottom = 20.0
+offset_left = -90.0
+offset_top = -77.5
+offset_right = 90.0
+offset_bottom = 41.5
 grow_horizontal = 2
 grow_vertical = 2
 alignment = 1
 
 [node name="LabelAltitude" type="Label" parent="Panel/VBoxContainer"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 60
+theme_override_font_sizes/font_size = 8
 text = "Altitude "
 horizontal_alignment = 1
 
 [node name="ValueAltitude" type="SpinBox" parent="Panel/VBoxContainer"]
-custom_minimum_size = Vector2(50, 20)
+custom_minimum_size = Vector2(30, 5)
 layout_mode = 2
 
 [node name="LabelInclination" type="Label" parent="Panel/VBoxContainer"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 60
+theme_override_font_sizes/font_size = 8
 text = "Inclination (INC)"
 horizontal_alignment = 1
 
 [node name="ValueInclination" type="HSlider" parent="Panel/VBoxContainer"]
-custom_minimum_size = Vector2(300, 0)
+custom_minimum_size = Vector2(50, 0)
 layout_mode = 2
 max_value = 360.0
 
 [node name="LabelCircularity" type="Label" parent="Panel/VBoxContainer"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 60
+theme_override_font_sizes/font_size = 8
 text = "Circularity (ECC)"
 horizontal_alignment = 1
 
 [node name="ValueCircularity" type="HSlider" parent="Panel/VBoxContainer"]
-custom_minimum_size = Vector2(300, 0)
+custom_minimum_size = Vector2(50, 0)
 layout_mode = 2
 
 [node name="Button" type="Button" parent="Panel"]
-layout_mode = 0
-offset_right = 8.0
-offset_bottom = 8.0
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -63.0
+offset_top = -42.0
+offset_right = 71.0
+offset_bottom = -11.0
+grow_horizontal = 2
+grow_vertical = 0
 text = "SAVE and CLOSE"
 
 [connection signal="pressed" from="Panel/Button" to="." method="_on_button_pressed"]
