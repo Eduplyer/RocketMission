@@ -1,7 +1,9 @@
-[gd_scene load_steps=3 format=3 uid="uid://cjeguv1crf7ol"]
+[gd_scene load_steps=5 format=3 uid="uid://cjeguv1crf7ol"]
 
 [ext_resource type="PackedScene" uid="uid://c4yfycpol177w" path="res://Interactives/main_character.tscn" id="1_ddsps"]
 [ext_resource type="Texture2D" uid="uid://cmdpmvwgvd2am" path="res://icon.svg" id="2_0lguc"]
+[ext_resource type="PackedScene" uid="uid://b75c03ntja5qd" path="res://Interactives/takelabel.tscn" id="3_j6mix"]
+[ext_resource type="Script" uid="uid://bt13taoys5wgi" path="res://Scripts/takelabel_gmat.gd" id="4_2hbnb"]
 
 [node name="SpaceCenter" type="Node2D"]
 
@@ -9,5 +11,9 @@
 
 [node name="Icon" type="Sprite2D" parent="."]
 modulate = Color(0, 0, 0, 1)
-position = Vector2(569, 276)
+position = Vector2(596, 326)
+scale = Vector2(0.328125, 0.328125)
 texture = ExtResource("2_0lguc")
+
+[node name="Area2D" parent="Icon" instance=ExtResource("3_j6mix")]
+script = ExtResource("4_2hbnb")
