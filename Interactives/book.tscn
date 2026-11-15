@@ -1,0 +1,52 @@
+[gd_scene load_steps=4 format=3 uid="uid://d4jpbscp864x5"]
+
+[ext_resource type="Script" uid="uid://c3d6thudms3cb" path="res://Scripts/book.gd" id="1_e8s4j"]
+[ext_resource type="Texture2D" uid="uid://cr6ikbxwi1fwx" path="res://Interactives/libro.png" id="2_75dc1"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_y0hms"]
+atlas = ExtResource("2_75dc1")
+
+[node name="Book" type="CanvasLayer"]
+script = ExtResource("1_e8s4j")
+
+[node name="Control" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="NinePatchRect" type="NinePatchRect" parent="Control"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = SubResource("AtlasTexture_y0hms")
+
+[node name="Hoja_IZQ" type="Panel" parent="Control/NinePatchRect"]
+layout_mode = 1
+anchors_preset = 4
+anchor_top = 0.5
+anchor_bottom = 0.5
+offset_left = 107.0
+offset_top = -300.0
+offset_right = 560.0
+offset_bottom = 224.0
+grow_vertical = 2
+
+[node name="Hoja_DER" type="Panel" parent="Control/NinePatchRect"]
+layout_mode = 1
+anchors_preset = 6
+anchor_left = 1.0
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_left = -522.0
+offset_top = -291.0
+offset_right = -69.0
+offset_bottom = 233.0
+grow_horizontal = 0
+grow_vertical = 2
