@@ -11,3 +11,9 @@ func get_input():
 	if direccion != Vector2.ZERO:
 		rotation = direccion.angle()
 	velocity=SPEED*direccion
+	
+var interactuable_actual: takelabel = null
+
+func _unhandled_input(event: InputEvent) -> void:
+	if event.is_action_pressed("Take") and interactuable_actual != null:
+		interactuable_actual.interact()
