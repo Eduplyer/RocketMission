@@ -7,10 +7,51 @@ extends Control
 @export var velocidad := 10.0
 
 @onready var contenedor: Control = $Centro
+@onready var texto_descripcion: RichTextLabel = $Descripcion 
+
 var indice := 0
 
+var misiones := [
+	{
+		"nombre": "Project Atlas VII",
+		"destino": "Low Earth Orbit (10 días)",
+		"pista": "Probar soporte vital y maniobras orbitales antes del viaje lunar. Requiere una órbita estable de baja altitud con ondas suaves sobre los trópicos.",
+		# Valores reales que debe acercar el jugador (consultando el libro)
+		"objetivo_altitud": 255.0,
+		"tolerancia_altitud": 35.0,
+		"objetivo_inclinacion": 30.0,
+		"tolerancia_inclinacion": 6.0,
+		"objetivo_circularidad": 98.0,
+		"tolerancia_circularidad": 8.0
+	},
+	{
+		"nombre": "Project Minerva II",
+		"destino": "The Moon - Flyby (9 días)",
+		"pista": "Sobrevuelo tripulado alrededor de la Luna y regreso. Exige una trayectoria sumamente alargada capaz de alcanzar la distancia lunar.",
+		"objetivo_altitud": 384000.0,
+		"tolerancia_altitud": 15000.0,
+		"objetivo_inclinacion": 28.5,
+		"tolerancia_inclinacion": 6.0,
+		"objetivo_circularidad": 5.0,
+		"tolerancia_circularidad": 10.0
+	},
+	{
+		"nombre": "Expedition I",
+		"destino": "ISS (10 días)",
+		"pista": "Transporte de tripulación a la Estación Espacial. La traza terrestre debe dibujar ondas amplias para cubrir casi todos los continentes.",
+		"objetivo_altitud": 408.0,
+		"tolerancia_altitud": 45.0,
+		"objetivo_inclinacion": 51.6,
+		"tolerancia_inclinacion": 4.0,
+		"objetivo_circularidad": 100.0,
+		"tolerancia_circularidad": 5.0
+	}
+]
+
 func _ready() -> void:
+	add_to_group("pantalla_missionselect")
 	_actualizar_carrusel(1.0)
+	_actualizar_info_mision()
 
 func _process(delta: float) -> void:
 	_actualizar_carrusel(clamp(velocidad * delta, 0.0, 1.0))
@@ -27,13 +68,9 @@ func _actualizar_carrusel(peso: float) -> void:
 
 		var distancia := i - indice
 		tarjeta.pivot_offset = tarjeta.size / 2.0
-
-		# Posiciona cada tarjeta respecto al centro
 		var destino_x := (distancia * separacion) - (tarjeta.size.x / 2.0)
 		var destino_y := -tarjeta.size.y / 2.0
 		tarjeta.position = tarjeta.position.lerp(Vector2(destino_x, destino_y), peso)
-
-		# Escala y transparencia
 		var es_actual := (i == indice)
 		var escala_obj := escala_seleccionado if es_actual else escala_inactivo
 		var alfa_obj := 1.0 if es_actual else opacidad_inactivo
@@ -54,3 +91,12 @@ func obtener_mapa_seleccionado() -> Control:
 	if contenedor.get_child_count() == 0:
 		return null
 	return contenedor.get_child(indice)
+
+func obtener_mision_seleccionada() -> Dictionary:
+	if indice < misiones.size():
+		return misiones[indice]
+	return {}
+func _actualizar_info_mision() -> void:
+	if texto_descripcion and indice < misiones.size():
+		var m: Dictionary = misiones[indice]
+		texto_descripcion.text = "[b]%s[/b] (%s)\n%s" % [m["nombre"], m["destino"], m["pista"]]

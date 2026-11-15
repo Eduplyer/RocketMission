@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=4 uid="uid://cjeguv1crf7ol"]
+[gd_scene load_steps=13 format=4 uid="uid://cjeguv1crf7ol"]
 
 [ext_resource type="PackedScene" uid="uid://c4yfycpol177w" path="res://Interactives/main_character.tscn" id="1_ddsps"]
 [ext_resource type="Texture2D" uid="uid://daf0ema0a8p8l" path="res://Assets/office_bg.png" id="3_imocd"]
@@ -6,6 +6,7 @@
 [ext_resource type="Texture2D" uid="uid://l6n8xjjm3b2x" path="res://Assets/monitor_bg.png" id="4_0fkm7"]
 [ext_resource type="Script" uid="uid://bt13taoys5wgi" path="res://Scripts/takelabel_gmat.gd" id="4_2hbnb"]
 [ext_resource type="Texture2D" uid="uid://cenhmde4yi8fv" path="res://Assets/tile.png" id="5_imocd"]
+[ext_resource type="Script" uid="uid://b3rmyp6pd4g3g" path="res://Scripts/takelabel_missionselect.gd" id="7_aokwl"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_0fkm7"]
 texture = ExtResource("5_imocd")
@@ -89,5 +90,8 @@ tile_set = SubResource("TileSet_xw6tj")
 
 [node name="Area2D" parent="." instance=ExtResource("3_j6mix")]
 position = Vector2(129, 54)
-scale = Vector2(0.1, 0.1)
 script = ExtResource("4_2hbnb")
+
+[node name="Area2D2" parent="." instance=ExtResource("3_j6mix")]
+position = Vector2(57, 63)
+script = ExtResource("7_aokwl")

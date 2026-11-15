@@ -1,10 +1,11 @@
 [gd_scene load_steps=4 format=3 uid="uid://d4jpbscp864x5"]
 
 [ext_resource type="Script" uid="uid://c3d6thudms3cb" path="res://Scripts/book.gd" id="1_e8s4j"]
-[ext_resource type="Texture2D" uid="uid://cr6ikbxwi1fwx" path="res://Interactives/libro.png" id="2_75dc1"]
+[ext_resource type="Texture2D" uid="uid://cguecx2oguf4t" path="res://Assets/windowpc.png" id="2_e8s4j"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_y0hms"]
-atlas = ExtResource("2_75dc1")
+atlas = ExtResource("2_e8s4j")
+region = Rect2(0, 130, 256, 126)
 
 [node name="Book" type="CanvasLayer"]
 script = ExtResource("1_e8s4j")

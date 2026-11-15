@@ -4,7 +4,7 @@
 [ext_resource type="FontFile" uid="uid://cw0vs6wx5rdr" path="res://Assets/Kenney Pixel.ttf" id="2_wbwm5"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_eb5e6"]
-radius = 128.0
+radius = 16.0
 
 [node name="Area2D" type="Area2D"]
 collision_layer = 4
@@ -30,17 +30,17 @@ anchor_left = 0.5
 anchor_top = 1.0
 anchor_right = 0.5
 anchor_bottom = 1.0
-offset_left = -80.0
-offset_top = 119.0
-offset_right = 80.0
-offset_bottom = 158.0
+offset_left = -18.0
+offset_top = 15.0
+offset_right = 20.0
+offset_bottom = 27.0
 grow_horizontal = 2
 grow_vertical = 0
 theme_override_colors/font_color = Color(0.12958151, 0.79278487, 0.07805806, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
-theme_override_constants/outline_size = 12
+theme_override_constants/outline_size = 4
 theme_override_fonts/font = ExtResource("2_wbwm5")
-theme_override_font_sizes/font_size = 50
+theme_override_font_sizes/font_size = 12
 text = "[e] to open"
 horizontal_alignment = 1
 

@@ -1,11 +1,11 @@
 extends CanvasLayer
 
-# 1. Nuevas páginas iniciales: Guía visual de las 5 órbitas de GMAT
+
 var orbitas := [
 	{
 		"tipo": "orbita",
 		"nombre": "Órbita Ecuatorial Baja (LEO)",
-		"imagen": "res://Assets/Map1.png", # <-- Cambia por la ruta de tu imagen
+		"imagen": "res://Assets/Map1.png", 
 		"patron": "Línea horizontal plana sobre el ecuador sin subir ni bajar hacia los polos.",
 		"rangos": "• [b]Altitud:[/b] 400 – 600 km\n• [b]Inclinación:[/b] 0° – 5°\n• [b]Circularidad:[/b] 95% – 100%",
 		"tip": "Si la traza no forma ondas y cruza el mapa rápido de izquierda a derecha, estás ante una órbita baja y ecuatorial."
@@ -128,8 +128,6 @@ func _ready() -> void:
 	if hoja_izq == null or hoja_der == null:
 		push_error("No encuentro Hoja_IZQ o Hoja_DER. Revisa los nombres.")
 		return
-
-	# Unimos primero las órbitas y luego las fallas en un solo libro
 	paginas.append_array(orbitas)
 	for f in fallas:
 		f["tipo"] = "falla"
@@ -176,7 +174,6 @@ func _crear_imagen(padre: Control) -> TextureRect:
 	img.anchor_top = 0
 	img.anchor_right = 1
 	img.anchor_bottom = 1
-	# Deja espacio arriba para el título y abajo para el botón "Anterior"
 	img.offset_left = 15
 	img.offset_top = 60
 	img.offset_right = -15
@@ -187,8 +184,6 @@ func _crear_boton(padre: Control, texto: String, izquierda: bool) -> Button:
 	var b := Button.new()
 	b.text = texto
 	b.add_theme_font_size_override("font_size", 8)
-	
-	# Quita el relleno gigante por defecto de los botones en Godot
 	var estilo := StyleBoxFlat.new()
 	estilo.bg_color = Color(0.15, 0.15, 0.2, 0.85)
 	estilo.content_margin_left = 4
@@ -200,7 +195,6 @@ func _crear_boton(padre: Control, texto: String, izquierda: bool) -> Button:
 	padre.add_child(b)
 	b.anchor_top = 1
 	b.anchor_bottom = 1
-	# Ancho de 64 px y alto de 16 px (usa 85 px de ancho y 20 px de alto en 480x270)
 	if izquierda:
 		b.anchor_left = 0
 		b.anchor_right = 0
@@ -217,9 +211,7 @@ func _crear_boton(padre: Control, texto: String, izquierda: bool) -> Button:
 
 func _mostrar_pagina() -> void:
 	var item: Dictionary = paginas[indice]
-
 	if item["tipo"] == "orbita":
-		# Hoja izquierda: Título + captura de GMAT
 		var izq := "[i]Telemetría Orbital %d de %d[/i]\n" % [indice + 1, orbitas.size()]
 		izq += "[b]%s[/b]" % item["nombre"]
 		texto_izq.text = izq
@@ -230,28 +222,21 @@ func _mostrar_pagina() -> void:
 		else:
 			imagen_izq.visible = false
 			texto_izq.text += "\n\n[i](Falta asignar imagen: %s)[/i]" % item["imagen"]
-
-		# Hoja derecha: Interpretación y rangos amigables
 		var der := "[b]¿Cómo se ve el gráfico?[/b]\n%s\n\n" % item["patron"]
 		der += "[b]Rangos aproximados:[/b]\n%s\n\n" % item["rangos"]
 		der += "[b]Clave de lectura:[/b]\n%s" % item["tip"]
 		texto_der.text = der
-
 	else:
-		# Hoja izquierda y derecha: Tu formato original de fallas
 		imagen_izq.visible = false
 		var num_falla := indice - orbitas.size() + 1
-
 		var izq := "[i]Problema %d de %d[/i]\n\n" % [num_falla, fallas.size()]
 		izq += "[b]%s[/b]\n\n" % item["nombre"]
 		izq += "[b]Probabilidad de falla:[/b] %s %%\n\n" % item["prob"]
 		izq += "[b]¿Por qué pasa?[/b]\n%s\n\n" % item["causa"]
 		izq += "[b]Caso real:[/b]\n%s" % item["caso"]
 		texto_izq.text = izq
-
 		var der := "[b]Cómo solucionarlo[/b]\n\n%s" % item["solucion"]
 		texto_der.text = der
-
 	btn_prev.disabled = (indice == 0)
 	btn_next.disabled = (indice == paginas.size() - 1)
 
