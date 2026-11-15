@@ -1,9 +1,10 @@
-[gd_scene load_steps=3 format=3 uid="uid://b75c03ntja5qd"]
+[gd_scene load_steps=4 format=3 uid="uid://b75c03ntja5qd"]
 
 [ext_resource type="Script" uid="uid://c3lvwef1bwbe6" path="res://Scripts/takelabel.gd" id="1_we2d8"]
+[ext_resource type="FontFile" uid="uid://cw0vs6wx5rdr" path="res://Assets/Kenney Pixel.ttf" id="2_wbwm5"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_eb5e6"]
-radius = 103.4843
+radius = 128.0
 
 [node name="Area2D" type="Area2D"]
 collision_layer = 4
@@ -29,14 +30,19 @@ anchor_left = 0.5
 anchor_top = 1.0
 anchor_right = 0.5
 anchor_bottom = 1.0
-offset_left = -103.0
-offset_top = 133.0
-offset_right = 105.0
-offset_bottom = 188.0
+offset_left = -80.0
+offset_top = 119.0
+offset_right = 80.0
+offset_bottom = 158.0
 grow_horizontal = 2
 grow_vertical = 0
-theme_override_font_sizes/font_size = 120
+theme_override_colors/font_color = Color(0.12958151, 0.79278487, 0.07805806, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 12
+theme_override_fonts/font = ExtResource("2_wbwm5")
+theme_override_font_sizes/font_size = 50
 text = "[e] to open"
+horizontal_alignment = 1
 
 [connection signal="body_entered" from="." to="." method="_on_body_entered"]
 [connection signal="body_exited" from="." to="." method="_on_body_exited"]

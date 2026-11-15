@@ -44,3 +44,8 @@ func obtener_datos_para_calculo() -> Dictionary:
 func _on_button_pressed() -> void:
 	obtener_datos_para_calculo()
 	hide()
+	
+
+
+func _on_close_pressed() -> void:
+	hide()

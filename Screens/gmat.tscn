@@ -1,6 +1,20 @@
-[gd_scene load_steps=2 format=3 uid="uid://bt3l75cgr6rg7"]
+[gd_scene load_steps=7 format=3 uid="uid://bt3l75cgr6rg7"]
 
 [ext_resource type="Script" uid="uid://cj0bvfg636lp5" path="res://Scripts/gmat.gd" id="1_umxmx"]
+[ext_resource type="Texture2D" uid="uid://cguecx2oguf4t" path="res://Assets/windowpc.png" id="2_vi2t7"]
+[ext_resource type="FontFile" uid="uid://cw0vs6wx5rdr" path="res://Assets/Kenney Pixel.ttf" id="3_8n0t2"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_qc10v"]
+atlas = ExtResource("2_vi2t7")
+region = Rect2(0, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_vi2t7"]
+atlas = ExtResource("2_vi2t7")
+region = Rect2(160, 48, 46, 34)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_8n0t2"]
+atlas = ExtResource("2_vi2t7")
+region = Rect2(210, 48, 34, 32)
 
 [node name="GMAT" type="Control"]
 layout_mode = 3
@@ -11,54 +25,67 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_umxmx")
 
-[node name="Panel" type="Panel" parent="."]
+[node name="Panel" type="NinePatchRect" parent="."]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+texture = SubResource("AtlasTexture_qc10v")
+region_rect = Rect2(-6, -8, 140, 142)
+patch_margin_left = 16
+patch_margin_top = 24
+patch_margin_right = 16
+patch_margin_bottom = 14
 
 [node name="VBoxContainer" type="VBoxContainer" parent="Panel"]
-custom_minimum_size = Vector2(180, 20)
+custom_minimum_size = Vector2(100, 20)
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -90.0
-offset_top = -77.5
-offset_right = 90.0
-offset_bottom = 41.5
+offset_left = -74.0
+offset_top = -64.5
+offset_right = 74.0
+offset_bottom = 54.5
 grow_horizontal = 2
 grow_vertical = 2
 alignment = 1
 
 [node name="LabelAltitude" type="Label" parent="Panel/VBoxContainer"]
+texture_filter = 1
 layout_mode = 2
-theme_override_font_sizes/font_size = 8
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("3_8n0t2")
+theme_override_font_sizes/font_size = 16
 text = "Altitude "
 horizontal_alignment = 1
 
 [node name="ValueAltitude" type="SpinBox" parent="Panel/VBoxContainer"]
-custom_minimum_size = Vector2(30, 5)
 layout_mode = 2
+theme_override_colors/up_icon_modulate = Color(0, 0, 0, 1)
+theme_override_colors/down_icon_modulate = Color(0, 0, 0, 1)
 
 [node name="LabelInclination" type="Label" parent="Panel/VBoxContainer"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 8
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("3_8n0t2")
+theme_override_font_sizes/font_size = 16
 text = "Inclination (INC)"
 horizontal_alignment = 1
 
 [node name="ValueInclination" type="HSlider" parent="Panel/VBoxContainer"]
-custom_minimum_size = Vector2(50, 0)
 layout_mode = 2
 max_value = 360.0
 
 [node name="LabelCircularity" type="Label" parent="Panel/VBoxContainer"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 8
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("3_8n0t2")
+theme_override_font_sizes/font_size = 16
 text = "Circularity (ECC)"
 horizontal_alignment = 1
 
@@ -66,19 +93,34 @@ horizontal_alignment = 1
 custom_minimum_size = Vector2(50, 0)
 layout_mode = 2
 
-[node name="Button" type="Button" parent="Panel"]
+[node name="Button" type="TextureButton" parent="Panel"]
 layout_mode = 1
 anchors_preset = 7
 anchor_left = 0.5
 anchor_top = 1.0
 anchor_right = 0.5
 anchor_bottom = 1.0
-offset_left = -63.0
-offset_top = -42.0
-offset_right = 71.0
-offset_bottom = -11.0
+offset_left = -15.0
+offset_top = -35.0
+offset_right = 31.0
+offset_bottom = -1.0
 grow_horizontal = 2
 grow_vertical = 0
-text = "SAVE and CLOSE"
+scale = Vector2(0.6, 0.6)
+texture_normal = SubResource("AtlasTexture_vi2t7")
+
+[node name="Close" type="TextureButton" parent="Panel"]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -31.0
+offset_top = 9.999999
+offset_right = 3.0
+offset_bottom = 42.0
+grow_horizontal = 0
+scale = Vector2(0.4, 0.4)
+texture_normal = SubResource("AtlasTexture_8n0t2")
 
 [connection signal="pressed" from="Panel/Button" to="." method="_on_button_pressed"]
+[connection signal="pressed" from="Panel/Close" to="." method="_on_close_pressed"]
