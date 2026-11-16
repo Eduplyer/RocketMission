@@ -1,4 +1,4 @@
-[gd_scene load_steps=34 format=4 uid="uid://cjeguv1crf7ol"]
+[gd_scene load_steps=37 format=4 uid="uid://cjeguv1crf7ol"]
 
 [ext_resource type="PackedScene" uid="uid://c4yfycpol177w" path="res://Interactives/main_character.tscn" id="1_ddsps"]
 [ext_resource type="Texture2D" uid="uid://daf0ema0a8p8l" path="res://Assets/office_bg.png" id="3_imocd"]
@@ -18,7 +18,9 @@
 [ext_resource type="Texture2D" uid="uid://bjstgffp8qkyh" path="res://Assets/office/chair2.png" id="10_ug058"]
 [ext_resource type="Texture2D" uid="uid://pjegyhfn1i72" path="res://Assets/office/desk3.png" id="11_quf3w"]
 [ext_resource type="Texture2D" uid="uid://b3e5fkak0hfpd" path="res://Assets/office/chair3.png" id="12_ug058"]
-[ext_resource type="Texture2D" uid="uid://bp3lpil1j7j8f" path="res://Assets/npc1.png" id="13_dpqsm"]
+[ext_resource type="Texture2D" uid="uid://b2gg5iddso6jj" path="res://Assets/scientifica/Idle/idle1.png" id="15_ug058"]
+[ext_resource type="Texture2D" uid="uid://nvg8pugqr1js" path="res://Assets/scientifica/Idle/idle2.png" id="19_mhqf2"]
+[ext_resource type="Texture2D" uid="uid://bbjvdinjgy2p5" path="res://Assets/button.png" id="21_mhqf2"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_0fkm7"]
 texture = ExtResource("5_imocd")
@@ -205,6 +207,10 @@ sources/7 = SubResource("TileSetAtlasSource_hevt1")
 sources/8 = SubResource("TileSetAtlasSource_smu54")
 sources/9 = SubResource("TileSetAtlasSource_mj76t")
 
+[sub_resource type="AtlasTexture" id="AtlasTexture_htl86"]
+atlas = ExtResource("21_mhqf2")
+region = Rect2(60, 28, 36, 36)
+
 [node name="SpaceCenter" type="Node2D"]
 
 [node name="MainCharacter" parent="." instance=ExtResource("1_ddsps")]
@@ -219,8 +225,11 @@ tile_map_data = PackedByteArray("AAD7//7/AAAAAAEAAAD8//7/AAAAAAEAAAD9//7/AAAAAAE
 tile_set = SubResource("TileSet_xw6tj")
 
 [node name="calibration" parent="." instance=ExtResource("3_j6mix")]
-position = Vector2(262, 312)
+position = Vector2(238, 359)
 script = ExtResource("4_2hbnb")
+
+[node name="Sprite2D" type="Sprite2D" parent="calibration"]
+texture = ExtResource("15_ug058")
 
 [node name="Mision" parent="." instance=ExtResource("3_j6mix")]
 position = Vector2(169, 8)
@@ -233,9 +242,14 @@ texture = ExtResource("10_spf5k")
 position = Vector2(761, 161)
 script = ExtResource("8_npi7n")
 
+[node name="Sprite2D" type="Sprite2D" parent="coheteterminal"]
+texture = ExtResource("19_mhqf2")
+
 [node name="launch" parent="." instance=ExtResource("3_j6mix")]
 position = Vector2(1323, 134)
 script = ExtResource("9_fw6d5")
+escena_eventos = "res://Screens/space_screen.tscn"
 
 [node name="Sprite2D" type="Sprite2D" parent="launch"]
-texture = ExtResource("13_dpqsm")
+scale = Vector2(0.75, 0.75)
+texture = SubResource("AtlasTexture_htl86")

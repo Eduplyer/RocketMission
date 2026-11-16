@@ -100,6 +100,7 @@ var tt_aviso: Label              # motivo por el que una pieza está bloqueada
 
 
 func _ready() -> void:
+	add_to_group("pantalla_coheteselect")
 	if not _nodos_ok():
 		return
 	estado = get_node_or_null("/root/GameState")
@@ -500,6 +501,12 @@ func guardar_nave() -> Dictionary:
 	archivo.store_string(JSON.stringify(datos, "\t"))
 	archivo.close()
 	print("Nave guardada en: ", ProjectSettings.globalize_path(RUTA_NAVE))
+	# --- NUEVO: Registrar nave y sus avisos de riesgo en GameManager ---
+	var avisos_nave: Array = validar(seleccionadas)["avisos"]
+	var riesgo_calc := float(avisos_nave.size()) * 5.0
+	var texto_avisos := ", ".join(PackedStringArray(avisos_nave))
+	GameManager.registrar_nave(riesgo_calc, texto_avisos, datos)
+	# ------------------------------------------------------------------
 	return datos
 
 

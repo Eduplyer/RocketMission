@@ -1,0 +1,210 @@
+{
+  "riesgos_tripulacion": [
+    {
+      "id": 1,
+      "nombre": "Fuerzas G sostenidas y vibración extrema",
+      "origen": "Space Weather / Crew Monitor",
+      "titulo_alerta": "WARNING! - High G-Force & Extreme Vibration",
+      "descripcion": "Main engine acceleration and stage separation are subjecting the crew to 3–4.5 G. Acoustic vibrations are blurring vision and pooling blood in lower extremities. Maintain breathing cadence and monitor vital signs",
+      "fase_mision": "Despegue",
+      "probabilidad_aparicion": "60%",
+      "consecuencia": "Visión periférica reducida (grey-out) y visión borrosa temporal; el jugador sufre una penalización de precisión en lectura de instrumentos y -10% de resistencia física de la tripulación durante el ascenso."
+    },
+    {
+      "id": 2,
+      "nombre": "Aborto de lanzamiento en ascenso",
+      "origen": "Space Weather / Crew Monitor",
+      "titulo_alerta": "WARNING! - Launch Abort & Escape Tower Activation",
+      "descripcion": "Critical structural failure or sudden solar flare telemetry blackout detected during ascent window. Launch Escape System firing immediately. Brace for 8–15 G sudden impact and emergency parachute descent",
+      "fase_mision": "Despegue",
+      "probabilidad_aparicion": "5%",
+      "consecuencia": "La misión se aborta de inmediato; la tripulación sufre -40% de salud por compresión vertebral y latigazo cervical severo, además de requerir rescate inmediato."
+    },
+    {
+      "id": 3,
+      "nombre": "Atravesar los Cinturones de Van Allen",
+      "origen": "Space Weather / Crew Monitor",
+      "titulo_alerta": "WARNING! - Van Allen Radiation Belts Transit",
+      "descripcion": "Spaceship is crossing trapped high-energy proton and electron zones. Geomagnetic activity is intensifying radiation belts. Expect elevated radiation dosage and early flight fatigue",
+      "fase_mision": "Despegue",
+      "probabilidad_aparicion": "35%",
+      "consecuencia": "Aumento inmediato del +25% en la radiación acumulada de la tripulación y aparición de náuseas/fatiga temprana que reduce la eficiencia operativa un 15% durante las primeras horas."
+    },
+    {
+      "id": 4,
+      "nombre": "Despresurización, Hipoxia y Ebullismo",
+      "origen": "Space Weather / Crew Monitor",
+      "titulo_alerta": "WARNING! - Hull Breach & Rapid Depressurization",
+      "descripcion": "Micrometeoroid impact has punctured the hull/EVA suit at hypervelocity. Cabin pressure dropping to zero. You have 10–15 seconds of useful consciousness before hypoxia and ebullism set in. Seal breach immediately",
+      "fase_mision": "Durante",
+      "probabilidad_aparicion": "10%",
+      "consecuencia": "Si el jugador no sella la brecha o activa el traje en menos de 15 segundos, la tripulación pierde el conocimiento y sufre -60% de salud por barotrauma pulmonar y ruptura de tímpanos (letal si no hay asistencia)."
+    },
+    {
+      "id": 5,
+      "nombre": "Enfermedad por Descompresión (\"The Bends\")",
+      "origen": "Space Weather / Crew Monitor",
+      "titulo_alerta": "WARNING! - Decompression Sickness Detected",
+      "descripcion": "Emergency spacesuit donned without completing the 2–4 hour pure oxygen nitrogen purge. Nitrogen bubbles are forming in joints, lungs, and bloodstream. Seek medical decompression protocol",
+      "fase_mision": "Durante",
+      "probabilidad_aparicion": "15%",
+      "consecuencia": "Dolor articular paralizante (-30% de movilidad y velocidad de reparación) y riesgo del 25% de embolia cerebral si no se administra oxígeno puro de inmediato."
+    },
+    {
+      "id": 6,
+      "nombre": "Síndrome de Irradiación Aguda y Ahogamiento (SEPs)",
+      "origen": "Space Weather / Crew Monitor",
+      "titulo_alerta": "WARNING! - Acute Radiation Syndrome (SEPs)",
+      "descripcion": "Unshielded exposure to high-energy solar protons detected (4–5 Sv). Severe radiation sickness and sudden vomiting imminent. Zero-gravity vomit inside EVA helmet poses lethal aspiration risk. Return to shielded core",
+      "fase_mision": "Durante",
+      "probabilidad_aparicion": "10%",
+      "consecuencia": "-45% de salud de la tripulación, quemaduras cutáneas y bloqueo total de actividades EVA; si un astronauta está en caminata espacial, tiene un 40% de probabilidad de asfixia si no regresa a la esclusa a tiempo."
+    },
+    {
+      "id": 7,
+      "nombre": "Intoxicación por CO2, Colapso Térmico e Incendios",
+      "origen": "Space Weather / Crew Monitor",
+      "titulo_alerta": "WARNING! - Life Support & Thermal Control Failure",
+      "descripcion": "Solar storm short circuits have disabled air scrubbers and thermal regulation. CO2 levels exceeding 4% and silent microgravity fire spheres detected releasing toxic fumes. Repair life support or evacuate module",
+      "fase_mision": "Durante",
+      "probabilidad_aparicion": "20%",
+      "consecuencia": "Pérdida gradual de -15% de salud por hipercapnia y golpe de calor/hipotermia cada minuto hasta que se reparen los depuradores y se extingan los focos de incendio."
+    },
+    {
+      "id": 8,
+      "nombre": "Degradación Crónica: Visión (SANS), Sueño e Inmunosupresión",
+      "origen": "Space Weather / Crew Monitor",
+      "titulo_alerta": "WARNING! - Chronic Spaceflight Deconditioning",
+      "descripcion": "Continuous cosmic ray exposure and cephalic fluid shift are flattening ocular globes and fragmenting sleep with retinal flashes. Bone density and immune response are declining. Enforce countermeasures",
+      "fase_mision": "Durante",
+      "probabilidad_aparicion": "50%",
+      "consecuencia": "Hipermetropía aguda (requiere ajustes en pantallas de control), -1.5% de resistencia física por mes de misión y cualquier herida menor tiene un 30% de probabilidad de infectarse."
+    },
+    {
+      "id": 9,
+      "nombre": "Traumatismos por Maniobras Evasivas",
+      "origen": "Space Weather / Crew Monitor",
+      "titulo_alerta": "WARNING! - Sudden Evasive Thruster Burn",
+      "descripcion": "Geomagnetic storm has altered orbital debris trajectories. Autopilot executing emergency thruster burn to avoid collision. Unsecured crew members face severe impact against metallic bulkheads",
+      "fase_mision": "Durante",
+      "probabilidad_aparicion": "25%",
+      "consecuencia": "Los tripulantes que no estén sujetos con arneses sufren fracturas o traumatismos craneales (-35% de salud) y quedan incapacitados temporalmente para realizar tareas médicas o técnicas."
+    },
+    {
+      "id": 10,
+      "nombre": "Error Fatal de Ángulo por Apagón de Radio y Ceguera de Sensores",
+      "origen": "Space Weather / Crew Monitor",
+      "titulo_alerta": "WARNING! - Entry Angle Deviation & Sensor Blindness",
+      "descripcion": "Solar flare radio blackout has severed ground telemetry and blinded Star Trackers with static. Entry corridor deviating by 1–2 degrees. Manual attitude correction required to prevent atmospheric bounce or burn-up",
+      "fase_mision": "Aterrizaje",
+      "probabilidad_aparicion": "15%",
+      "consecuencia": "El jugador debe corregir el ángulo manualmente sin guía externa; si falla, la nave sufre daño crítico en el escudo térmico (-50% de integridad) o se desvía drásticamente de la zona de aterrizaje."
+    },
+    {
+      "id": 11,
+      "nombre": "Sobrecarga Gravitatoria en Cuerpos Debilitados",
+      "origen": "Space Weather / Crew Monitor",
+      "titulo_alerta": "WARNING! - High-G Reentry on Deconditioned Crew",
+      "descripcion": "Aerodynamic deceleration subjecting weakened crew to 4–5 G (up to 8 G ballistic). Reduced blood volume and muscle mass are causing severe chest compression and G-LOC risk. Monitor parachute deployment systems",
+      "fase_mision": "Aterrizaje",
+      "probabilidad_aparicion": "40%",
+      "consecuencia": "Riesgo del 35% de pérdida de consciencia (G-LOC) durante los segundos críticos del despliegue de paracaídas, obligando a depender de los sistemas automáticos de la cápsula."
+    },
+    {
+      "id": 12,
+      "nombre": "Fallo Térmico del Escudo o Despliegue de Paracaídas",
+      "origen": "Space Weather / Crew Monitor",
+      "titulo_alerta": "WARNING! - Heat Shield Breach / Parachute Failure",
+      "descripcion": "Undetected micrometeoroid tile damage or radiation-induced pyrotechnic failure detected during peak heating. Superheated plasma leaking into cabin or terminal velocity impact imminent. Activate backup systems",
+      "fase_mision": "Aterrizaje",
+      "probabilidad_aparicion": "10%",
+      "consecuencia": "Si el jugador no activa los paracaídas de reserva o no redirige energía al escudo, la cápsula sufre daño catastrófico (-70% de salud de la nave y tripulación)."
+    },
+    {
+      "id": 13,
+      "nombre": "Hipotensión Ortostática y Desmayo Inmediato",
+      "origen": "Space Weather / Crew Monitor",
+      "titulo_alerta": "WARNING! - Severe Orthostatic Hypotension",
+      "descripcion": "Abrupt return to 1 G gravity is preventing weakened cardiovascular systems from pumping blood to the brain. Tunnel vision and immediate fainting upon standing. Remain seated and wait for recovery teams",
+      "fase_mision": "Aterrizaje",
+      "probabilidad_aparicion": "45%",
+      "consecuencia": "La tripulación queda inmovilizada tras el impacto; si la cápsula cae fuera de zona y presenta humo o entrada de agua, los astronautas no podrán abrir la escotilla por sí mismos durante los primeros 5 minutos."
+    },
+    {
+      "id": 14,
+      "nombre": "Cinetosis Severa (\"Mareo Terrestre\") y Desorientación Vestibular",
+      "origen": "Space Weather / Crew Monitor",
+      "titulo_alerta": "WARNING! - Severe Vestibular Disorientation",
+      "descripcion": "Inner ear adaptation to zero-G is clashing with Earth gravity and ocean wave motion. Uncontrollable vomiting and total loss of balance detected. Survival tasks severely impaired",
+      "fase_mision": "Aterrizaje",
+      "probabilidad_aparicion": "55%",
+      "consecuencia": "Penalización del -50% en la velocidad de ejecución de cualquier acción de supervivencia o comunicación externa durante las primeras 24 horas tras el aterrizaje/amarizaje."
+    },
+    {
+      "id": 15,
+      "nombre": "Trauma Mecánico en el Impacto Final y Riesgo Ambiental",
+      "origen": "Space Weather / Crew Monitor",
+      "titulo_alerta": "WARNING! - Hard Surface Impact & Toxic Fumes",
+      "descripcion": "Soft-landing retrorockets failed or capsule splashed down in rough seas off-course. High risk of spinal fractures, cabin flooding, and hypergolic fuel (hydrazine) vapor leaks around the hatch",
+      "fase_mision": "Aterrizaje",
+      "probabilidad_aparicion": "20%",
+      "consecuencia": "-25% de salud de la tripulación por fracturas costales/vertebrales; si se abre la escotilla antes de que se disipen los vapores de hidracina, la tripulación sufre intoxicación pulmonar severa (-20% de salud adicional)."
+    }
+  ],
+  "riesgos_nave": [
+    {
+      "id": 1,
+      "nombre": "Space Radiation",
+      "titulo_alerta": "WARNING! - Space radiation detected",
+      "descripcion": "Space radiation has been spotted coming directly towards the spaceship. Leave what you’re doing and hide in a safe place",
+      "fase_mision": "Durante",
+      "probabilidad_aparicion": "30%",
+      "consecuencia": "Si el jugador cuenta con blindaje pesado, no hay daños. Si no tiene blindaje pesado, la nave se deteriora progresivamente con una pérdida de -5% de salud durante el evento."
+    },
+    {
+      "id": 2,
+      "nombre": "Solar Flares",
+      "titulo_alerta": "WARNING! - Solar Flares detected",
+      "descripcion": "Sudden outbursts of intense light and electromagnetic energy from the sun have been spotted and are pointing directly towards the spaceship",
+      "fase_mision": "Durante",
+      "probabilidad_aparicion": "25%",
+      "consecuencia": "Apagón temporal del sistema durante un tiempo determinado donde el jugador no tiene la opción de realizar acciones ni tomar decisiones."
+    },
+    {
+      "id": 3,
+      "nombre": "CMEs (Coronal Mass Ejections)",
+      "titulo_alerta": "WARNING! - Coronal Mass Ejections detected",
+      "descripcion": "A powerful and sudden expulsion of billions of tons of plasma and magnetic fields from the solar corona into interplanetary space have been detected near the spaceship in the next three days. They will generate short circuits. Please turn off important systems",
+      "fase_mision": "Durante",
+      "probabilidad_aparicion": "15%",
+      "consecuencia": "El jugador debe apagar los sistemas de uso constante antes del tercer día. Si no se apagan, los sistemas encendidos tienen un 60% de probabilidad de dejar de funcionar."
+    },
+    {
+      "id": 4,
+      "nombre": "SEPs (Solar Energetic Particles)",
+      "titulo_alerta": "WARNING! - Solar Energetic Particles",
+      "descripcion": "Storms of highly charged particles that penetrate suits and helmets have been spotted nearby the spaceship. They are lethal to human tissue. Stop your tasks and hide in the most heavily armoured part in the spaceship",
+      "fase_mision": "Durante",
+      "probabilidad_aparicion": "10%",
+      "consecuencia": "El jugador debe abandonar cualquier tarea de inmediato y refugiarse en la sección con el máximo blindaje de la nave para evitar daños letales."
+    },
+    {
+      "id": 5,
+      "nombre": "Tormentas geomagnéticas",
+      "titulo_alerta": "WARNING! - Geomagnetic Storm detected",
+      "descripcion": "Severe disturbances in the magnetic field have been triggered by high-speed solar wind streams, heavily disrupting navigation arrays and long-range communications. Please adjust course and expend fuel to maintain stability",
+      "fase_mision": "Aterrizaje",
+      "probabilidad_aparicion": "20%",
+      "consecuencia": "Bloqueo en las comunicaciones y gasto adicional de un 20% de combustible en correcciones de trayectoria mientras la tormenta esté activa."
+    },
+    {
+      "id": 6,
+      "nombre": "Interplanetary Shocks (IPS)",
+      "titulo_alerta": "WARNING! - Interplanetary Shock wave detected",
+      "descripcion": "A sharp compression front where fast solar wind overtakes slower plasma has been detected in the sector. Basal radiation is ticking upward, acting as a precursor to more severe space weather. Prepare for heightened radiation and follow-up alerts",
+      "fase_mision": "Despegue",
+      "probabilidad_aparicion": "35%",
+      "consecuencia": "La radiación basal de la nave aumenta un 30% de forma inmediata y sirve como alerta temprana (con un margen de 6 a 12 horas) de un evento peor próximo a impactar."
+    }
+  ]
+}

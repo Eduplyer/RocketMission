@@ -588,6 +588,13 @@ func guardar_cohete() -> Dictionary:
 	print("Cohete guardado en: ", ProjectSettings.globalize_path(RUTA_LANZAMIENTO))
 	if estado:
 		estado.registrar_cohete(datos)     # la misión (nave + cohete) queda en el autoload
+	# --- NUEVO: Registrar cohete, fiabilidad y vulnerabilidades en GameManager ---
+	var avisos_cohete: Array = evaluar(t)["avisos"]
+	var riesgo_por_fiabilidad := (1.0 - float(t["fiab"])) * 100.0
+	var riesgo_total_cohete := riesgo_por_fiabilidad + (float(avisos_cohete.size()) * 5.0)
+	var texto_avisos := ", ".join(PackedStringArray(avisos_cohete))
+	GameManager.registrar_cohete(riesgo_total_cohete, texto_avisos, datos)
+	# ----------------------------------------------------------------------------
 	return datos
 
 
