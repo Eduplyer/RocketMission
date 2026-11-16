@@ -28,7 +28,7 @@ offset_top = 43.0
 offset_right = 287.0
 offset_bottom = 123.0
 theme_override_fonts/font = ExtResource("1_wsghj")
-theme_override_font_sizes/font_size = 100
+theme_override_font_sizes/font_size = 50
 text = "FAILED"
 horizontal_alignment = 1
 

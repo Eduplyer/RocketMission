@@ -653,7 +653,6 @@ func _on_atras() -> void:
 		push_error("Error al volver a la nave. Revisa que la ruta exista: " + ruta_nave)
 
 
-# ---------- Crear el cohete ----------
 func _on_lanzar() -> void:
 	if construyendo:
 		return
@@ -677,10 +676,10 @@ func _on_lanzar() -> void:
 	construyendo = false
 	actualizar_resumen()
 
-	# Deja programado el teletransporte de main_character a (845, 160)
-	GameManager.solicitar_teletransporte_player(Vector2(845, 160))
+	# Abre automáticamente la pantalla de elección de astronauta como siguiente paso obligatorio
+	GameManager.solicitar_abrir_astronautas()
 
-	# Si space_center sigue cargado detrás (en GUI), solo oculta el panel;
+	# Si space_center sigue cargado detrás (en GUI), solo oculta este panel;
 	# si se descargó al cambiar de escena, vuelve a cargar space_center.tscn.
 	var escena_actual := get_tree().current_scene
 	var player_en_escena := escena_actual != null and (
@@ -695,7 +694,6 @@ func _on_lanzar() -> void:
 		get_tree().change_scene_to_file(escena_siguiente)
 	else:
 		push_error("Asigna 'space_center.tscn' en la propiedad 'Escena Siguiente' del Inspector.")
-
 
 # Guarda el lanzamiento (con la nave adentro, para que la etapa siguiente solo lea este archivo)
 # y lo registra en GameState como la misión lista.
