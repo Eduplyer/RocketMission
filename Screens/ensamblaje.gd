@@ -5,6 +5,15 @@ extends Control
 ## sustentación, espacios de la cofia, presupuesto restante y combustible (delta-v) hacia el destino.
 ## Al pulsar "Crear": valida que todo sea compatible, registra la misión en GameState y muestra un mensaje de éxito.
 ## Si vuelves "atrás" y regresas, el cohete que habías elegido sigue ahí (mientras la nave no cambie).
+##
+## PARTE EDUCATIVA (nueva):
+##  - Al pasar el mouse sobre una pieza se ve el EFECTO en sustentación, delta-v, costo y fiabilidad antes de elegirla.
+##  - Lista "ROCKET CHECK": un renglón por requisito ([x] listo, [ ] falta, [!] error, [-] opcional) y un punto de color por pestaña.
+##  - Los errores dicen qué hacer para arreglarlos.
+##  - Cada barra tiene un tooltip que explica qué mide (la del combustible explica la ecuación del cohete) y su desglose.
+##  - Un consejo corto por pestaña (TIP) explica el concepto de ingeniería.
+##  - Si no hay cohete elegido, arranca con el más barato que sirve para la nave (así puedes probar la escena sola).
+## Nodos opcionales: "LabelChecklist" (el checklist) y "LabelConsejo" (el TIP). Si no existen, todo sale en LabelResumen.
 
 # Se emite al pulsar el botón de crear, con el mismo diccionario que se guardó en RUTA_LANZAMIENTO.
 signal cohete_construido(datos: Dictionary)
@@ -18,24 +27,26 @@ const ARCHIVOS_NAVE := ["potencia", "actitud", "comunicaciones", "control_termic
 const ARCHIVO_COHETE := "cohete"
 const RUTA_NAVE := "user://nave.json"
 const RUTA_LANZAMIENTO := "user://lanzamiento.json"
-# Hasta que la pantalla de misión guarde "destino" en nave.json, se usa este (clave de meta.destinos_delta_v_ms).
+# Si la nave no trae "destino", se usa este (clave de meta.destinos_delta_v_ms).
 const DESTINO_PRUEBA := "marte_orbita"
 const DURACION_MENSAJE := 2.2     # segundos que se ve el mensaje de éxito antes de pasar a la escena siguiente
 
 # Una pestaña por subcategoría de cohete.json. El 1.er botón de $Pestanas muestra la 1.ª, etc.
 # Sobran botones de pestaña (tienes 6 y aquí hay 5): el script oculta los que no se usan.
 const CATEGORIAS := ["cofia", "motor", "booster", "avionica", "proteccion"]
-const NOMBRES_CATEGORIA := {
-	"cofia": "Fairing", "motor": "Engine", "booster": "Boosters",
-	"avionica": "Flight computer", "proteccion": "Protection",
-}
 # Estas se eligen como "una sola" (al elegir otra se cambia). Boosters y amortiguador se activan/desactivan.
 # El tanque no se elige: lo trae el motor (su campo "requiere").
 const UNICAS := ["cofia", "motor", "avionica"]
+# Renglones del checklist (en este orden). Los tres últimos no son piezas: son límites que se cumplen o no.
+const FILAS := ["cofia", "motor", "avionica", "booster", "proteccion", "carga", "combustible", "presupuesto"]
+# A qué pestaña pertenece el problema de cada renglón (para el punto de color de la pestaña).
+const PESTANA_DE_FILA := {"cofia": "cofia", "motor": "motor", "avionica": "avionica", "booster": "booster",
+	"proteccion": "proteccion", "carga": "motor", "combustible": "motor"}
 
 const COLUMNAS := 4
 const TAM_CASILLA := Vector2(23, 23)
 const TAM_PESTANA := Vector2(5, 10)
+const TAM_INDICADOR := Vector2(3, 3)   # punto de estado en cada pestaña
 const ESTILO_POR_CODIGO := true
 var colores_pestana := [Color("d8b8a8"), Color("b0bcd8"), Color("b0d8d0"), Color("d8a8c8"), Color("d8d0b0"), Color("a8d0e8")]
 
@@ -54,38 +65,98 @@ const NOMBRES_BARRAS := {
 const COLOR_OK := Color("6bbf8a")
 const COLOR_CERCA := Color("e0b84c")
 const COLOR_MAL := Color("d9645a")
+const COLOR_OPCIONAL := Color("9aa5a8")
 
 var idioma := "en"
 const TXT := {
 	"es": {"rocket": "Cohete", "err": "ERROR", "warn": "AVISO", "dest": "Destino: %s",
 		"dv": "Delta-v: %d / %d m/s", "reliab": "Fiabilidad: %d%%",
-		"missing": "Falta: %s", "overweight": "Carga demasiado pesada: %d kg > %d kg de sustentación",
-		"no_slots": "La nave necesita %d espacios y la cofia tiene %d",
-		"needs": "La nave requiere: %s", "no_fuel": "Combustible insuficiente: necesita %d kg y el tanque tiene %d kg",
-		"over_budget": "Presupuesto excedido (%s / %s)", "vuln": "%s es vulnerable a %s",
-		"req": "%s requiere %s", "req_one": "%s requiere al menos uno de: %s", "incomp": "%s es incompatible con %s",
+		"missing": "Falta: %s. Elige uno en su pestaña.",
+		"overweight": "Carga demasiado pesada: %d kg contra %d kg de sustentación. Elige un motor más fuerte, agrega boosters o aligera la nave.",
+		"no_slots": "La nave necesita %d espacios y la cofia tiene %d. Elige una cofia más grande.",
+		"needs": "La nave requiere: %s. Elígelo en su pestaña.",
+		"no_fuel": "Combustible insuficiente: el viaje necesita %d kg y el tanque guarda %d kg. Usa un motor más eficiente o una nave más ligera.",
+		"over_budget": "Presupuesto excedido (%s / %s). Elige piezas más baratas.",
+		"vuln": "%s es vulnerable a %s (evento del lanzamiento). Agrega una pieza que lo mitigue.",
+		"req": "%s necesita %s para funcionar.", "req_one": "%s necesita al menos uno de: %s.",
+		"incomp": "%s no se puede combinar con %s. Quita uno de los dos.",
 		"blk_slots": "Muy chica: la nave necesita %d espacios", "blk_needs": "La nave requiere: %s",
 		"blk_engine": "Primero elige un motor", "blk_budget": "Sin presupuesto (faltan %s)",
 		"built_title": "¡Cohete construido con éxito!", "built_ready": "Nave y cohete guardados. Listos para el lanzamiento.",
 		"budget_left": "Presupuesto restante: %s", "build_fail": "No se pudo construir",
-		"save_fail": "No se pudo guardar el cohete."},
+		"save_fail": "No se pudo guardar el cohete.",
+		"check": "REVISIÓN DEL COHETE", "add_one": "falta elegir", "more_errs": " (+%d más)", "tip": "CONSEJO",
+		"optional": "opcional", "need_engine": "primero elige un motor",
+		"boost_detail": "+%d kg de sustentación, sin combustible extra",
+		"prot_hint": "hay piezas de la nave vulnerables al lanzamiento",
+		"fairing_detail": "%d / %d espacios", "engine_detail": "Isp %d s | tanque %d kg",
+		"row_carga": "Sustentación", "row_combustible": "Combustible", "row_presupuesto": "Presupuesto",
+		"d_add": "Si la eliges:", "d_remove": "Si la quitas:",
+		"d_lift": "Sustentación libre %+d -> %+d kg", "d_dv": "Delta-v %d -> %d m/s (hacen falta %d)",
+		"d_cost": "Costo %s -> %s", "d_rel": "Fiabilidad %d%% -> %d%%",
+		"ship_kg": "Nave: %d kg", "lift_line": "%s: %+d kg de sustentación", "mass_line": "%s: %d kg",
+		"slots_need": "La nave ocupa %d espacios", "slots_have": "La cofia tiene %d espacios",
+		"to_dest": "Para llegar a %s hacen falta %d m/s", "isp_line": "Isp del motor: %d s",
+		"fuel_line": "Combustible necesario %d kg; el tanque guarda %d kg", "dv_line": "Con este tanque: %d m/s",
+		"tip_bar_carga": "Lo que el cohete debe levantar (nave + cofia + amortiguadores) contra la sustentación de motores y boosters.",
+		"tip_bar_espacios": "Espacios que ocupa la nave contra los que tiene la cofia. Una cofia más grande cuesta más y pesa más.",
+		"tip_bar_presupuesto": "Costo del cohete contra el presupuesto que dejó la nave.",
+		"tip_bar_combustible": "Combustible que necesita el viaje contra lo que guarda el tanque. Delta-v = Isp x g0 x ln(m_inicial / m_final): cada kilo extra de nave pide mucho más combustible.",
+		"tip_cofia": "La cofia es la cáscara que protege la nave durante el ascenso. Todas las piezas deben caber dentro y su propio peso también hay que levantarlo.",
+		"tip_motor": "El motor trae su propio tanque. El Isp (impulso específico) es el empuje por kilo de combustible: con Isp mayor hace falta menos combustible para el mismo viaje.",
+		"tip_booster": "Los boosters dan sustentación para que despeguen naves más pesadas, pero se agotan durante el ascenso y no agregan combustible para el viaje.",
+		"tip_avionica": "La computadora de vuelo guía el cohete. Su fiabilidad multiplica la probabilidad de un buen lanzamiento; las endurecidas contra radiación también resisten el clima espacial.",
+		"tip_proteccion": "El lanzamiento sacude todo. Un amortiguador reduce la vibración que puede dañar las piezas frágiles de tu nave."},
 	"en": {"rocket": "Rocket", "err": "ERROR", "warn": "WARNING", "dest": "Destination: %s",
 		"dv": "Delta-v: %d / %d m/s", "reliab": "Reliability: %d%%",
-		"missing": "Missing: %s", "overweight": "Payload too heavy: %d kg > %d kg of lift",
-		"no_slots": "Ship needs %d slots, fairing has %d",
-		"needs": "The ship requires: %s", "no_fuel": "Not enough fuel: needs %d kg, tank holds %d kg",
-		"over_budget": "Budget exceeded (%s / %s)", "vuln": "%s is vulnerable to %s",
-		"req": "%s requires %s", "req_one": "%s requires at least one of: %s", "incomp": "%s is incompatible with %s",
+		"missing": "Missing: %s. Pick one in its tab.",
+		"overweight": "Payload too heavy: %d kg against %d kg of lift. Choose a stronger engine, add boosters or lighten the ship.",
+		"no_slots": "The ship needs %d slots but the fairing has %d. Choose a bigger fairing.",
+		"needs": "The ship requires: %s. Pick it in its tab.",
+		"no_fuel": "Not enough fuel: the trip needs %d kg and the tank holds %d kg. Use a more efficient engine or a lighter ship.",
+		"over_budget": "Budget exceeded (%s / %s). Choose cheaper parts.",
+		"vuln": "%s is vulnerable to %s (a launch event). Add a part that mitigates it.",
+		"req": "%s needs %s to work.", "req_one": "%s needs at least one of: %s.",
+		"incomp": "%s cannot be combined with %s. Remove one of them.",
 		"blk_slots": "Too small: ship needs %d slots", "blk_needs": "The ship requires: %s",
 		"blk_engine": "Needs an engine first", "blk_budget": "Over budget (short by %s)",
 		"built_title": "Rocket built successfully!", "built_ready": "Ship and rocket saved. Ready for launch.",
 		"budget_left": "Budget left: %s", "build_fail": "Could not build",
-		"save_fail": "The rocket could not be saved."},
+		"save_fail": "The rocket could not be saved.",
+		"check": "ROCKET CHECK", "add_one": "still to pick", "more_errs": " (+%d more)", "tip": "TIP",
+		"optional": "optional", "need_engine": "pick an engine first",
+		"boost_detail": "+%d kg of lift, no extra fuel",
+		"prot_hint": "some ship parts are vulnerable to launch events",
+		"fairing_detail": "%d / %d slots", "engine_detail": "Isp %d s | tank %d kg",
+		"row_carga": "Lift", "row_combustible": "Fuel", "row_presupuesto": "Budget",
+		"d_add": "If you pick it:", "d_remove": "If you remove it:",
+		"d_lift": "Spare lift %+d -> %+d kg", "d_dv": "Delta-v %d -> %d m/s (needs %d)",
+		"d_cost": "Cost %s -> %s", "d_rel": "Reliability %d%% -> %d%%",
+		"ship_kg": "Ship: %d kg", "lift_line": "%s: %+d kg of lift", "mass_line": "%s: %d kg",
+		"slots_need": "The ship takes %d slots", "slots_have": "The fairing has %d slots",
+		"to_dest": "Reaching %s takes %d m/s", "isp_line": "Engine Isp: %d s",
+		"fuel_line": "Fuel needed %d kg; the tank holds %d kg", "dv_line": "With this tank: %d m/s",
+		"tip_bar_carga": "What the rocket must lift (ship + fairing + dampers) against the lift of the engines and boosters.",
+		"tip_bar_espacios": "Slots the ship takes against the slots inside the fairing. A bigger fairing costs more and weighs more.",
+		"tip_bar_presupuesto": "Cost of the rocket against the budget the ship left over.",
+		"tip_bar_combustible": "Fuel the trip needs against what the tank holds. Delta-v = Isp x g0 x ln(m_start / m_end): every extra kilogram of ship needs far more fuel.",
+		"tip_cofia": "The fairing is the nose shell that protects the ship during ascent. Every ship part must fit inside it, and its own weight also has to be lifted.",
+		"tip_motor": "The engine brings its own tank. Isp (specific impulse) is the push per kilogram of fuel: a higher Isp needs less fuel for the same trip.",
+		"tip_booster": "Boosters add lift so heavier ships can leave the ground, but they burn out during ascent and add no fuel for the trip.",
+		"tip_avionica": "The flight computer guides the rocket. Its reliability multiplies into the odds of a good launch; radiation-hardened ones also survive space weather.",
+		"tip_proteccion": "Launch shakes everything. A damper reduces the vibration that can damage fragile parts of your ship."},
+}
+# Nombre visible de cada pestaña (tooltip de la pestaña y checklist).
+const NOMBRES_SUB := {
+	"es": {"cofia": "Cofia", "motor": "Motor", "booster": "Boosters", "avionica": "Computadora de vuelo", "proteccion": "Protección"},
+	"en": {"cofia": "Fairing", "motor": "Engine", "booster": "Boosters", "avionica": "Flight computer", "proteccion": "Protection"},
 }
 
 @onready var grid_piezas: GridContainer = get_node_or_null("PanelPersonaliza/GridPiezas")
 @onready var pestanas: VBoxContainer = get_node_or_null("Pestanas")
 @onready var label_resumen: Label = find_child("LabelResumen", true, false) as Label
+@onready var label_checklist: Label = find_child("LabelChecklist", true, false) as Label   # opcional
+@onready var label_consejo: Label = find_child("LabelConsejo", true, false) as Label       # opcional
 
 # ---------- Datos ----------
 var estado = null             # el autoload GameState (null si no está registrado)
@@ -107,6 +178,8 @@ var seleccion := []           # ids elegidos (sin tanques: el tanque lo agrega _
 var slots: Array[Button] = []
 var ids_en_slots := []
 var barras := {}
+var indicadores := {}         # subcategoría -> punto de color de su pestaña
+var categoria_actual := 0     # índice de la pestaña visible
 var boton_construir: Button
 var boton_atras: Button
 var construyendo := false     # evita pulsar "Crear" dos veces mientras se muestra el mensaje
@@ -115,6 +188,7 @@ var tooltip: PanelContainer
 var tt_titulo: Label
 var tt_resumen: Label
 var tt_stats: Label
+var tt_delta: Label           # efecto de elegir (o quitar) la pieza
 var tt_aviso: Label
 
 # Mensaje flotante (éxito / error al pulsar "Crear")
@@ -135,10 +209,11 @@ func _ready() -> void:
 	_crear_tooltip()
 	_crear_mensaje()
 	grid_piezas.columns = COLUMNAS
-	if label_resumen:
-		label_resumen.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-		label_resumen.custom_minimum_size = Vector2(200, 0)
-		label_resumen.add_theme_font_size_override("font_size", 14)
+	for l in [label_resumen, label_checklist, label_consejo]:
+		if l:
+			l.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+			l.custom_minimum_size = Vector2(200, 0)
+			l.add_theme_font_size_override("font_size", 14)
 	preparar_casillas()
 	preparar_pestanas()
 	preparar_barras()
@@ -158,7 +233,11 @@ func _process(_delta: float) -> void:
 
 
 func _s(clave: String) -> String:
-	return TXT[idioma][clave]
+	return String(TXT[idioma].get(clave, clave))
+
+
+func _nombre_sub(sub: String) -> String:
+	return String(NOMBRES_SUB[idioma].get(sub, sub))
 
 
 func _nodos_ok() -> bool:
@@ -242,9 +321,10 @@ func _guardar_borrador() -> void:
 
 
 # Si el jugador ya había elegido un cohete para ESTA nave, se recupera; si no, arranca con el mínimo
-# que calculó la pantalla de la nave (sin tanques: se agregan solos).
+# que calculó la pantalla de la nave (sin tanques: se agregan solos). Lo que falte se completa con lo más barato que sirva.
 func _seleccion_inicial() -> void:
 	seleccion.clear()
+	var recuperada := false
 	if estado:
 		var guardada: Array = estado.cohete_borrador_para(_firma_nave())
 		for id in guardada:
@@ -252,11 +332,50 @@ func _seleccion_inicial() -> void:
 				seleccion.append(id)
 		if not seleccion.is_empty():
 			print("Cohete recuperado: %d piezas" % seleccion.size())
-			return
-	var minimo: Dictionary = nave.get("cohete_minimo", {})
-	for id in minimo.get("ids", []):
-		if cohete.has(id) and cohete[id].get("subcategoria", "") != "tanque":
-			seleccion.append(id)
+			recuperada = true
+	if not recuperada:
+		var minimo: Dictionary = nave.get("cohete_minimo", {})
+		for id in minimo.get("ids", []):
+			if cohete.has(id) and cohete[id].get("subcategoria", "") != "tanque":
+				seleccion.append(id)
+	_completar_seleccion()
+
+
+# Para cada pieza "única" que falte (cofia, motor, computadora) elige la más barata que se pueda usar.
+# En el motor prefiere uno que levante la carga y tenga combustible. Así la escena arranca con un cohete válido
+# aunque la abras sola (sin pasar por la nave).
+func _completar_seleccion() -> void:
+	for sub in UNICAS:
+		var ya := false
+		for id in seleccion:
+			if cohete[id].get("subcategoria", "") == sub:
+				ya = true
+		if ya:
+			continue
+		var mejor := ""
+		var mejor_mal := true
+		var mejor_precio := 0.0
+		for id in cohete:
+			if cohete[id].get("subcategoria", "") != sub or _razon_bloqueo(id) != "":
+				continue
+			var sim: Array = seleccion.duplicate()
+			_aplicar_en(sim, id)
+			var t := calcular(sim)
+			var mal: bool = sub == "motor" and (t["carga"] > t["cap"] or t["necesario"] > t["cap_comb"])
+			var precio := float(cohete[id]["precio_juego"])
+			var gana := false
+			if mejor == "":
+				gana = true
+			elif mejor_mal and not mal:
+				gana = true
+			elif mal == mejor_mal and precio < mejor_precio:
+				gana = true
+			if gana:
+				mejor = id
+				mejor_mal = mal
+				mejor_precio = precio
+		if mejor != "":
+			seleccion.append(mejor)
 
 
 # ---------- Reglas de selección ----------
@@ -460,12 +579,24 @@ func preparar_pestanas() -> void:
 		boton.button_pressed = (i == 0)
 		boton.focus_mode = Control.FOCUS_NONE
 		boton.custom_minimum_size = TAM_PESTANA
-		boton.tooltip_text = NOMBRES_CATEGORIA[CATEGORIAS[i]]
+		boton.tooltip_text = _nombre_sub(CATEGORIAS[i])
 		_ignorar_mouse_en_hijos(boton)
 		if ESTILO_POR_CODIGO:
 			_estilo_pestana(boton, colores_pestana[i])
+		_crear_indicador(boton, CATEGORIAS[i])      # después del estilo, que oculta los ColorRect hijos
 		boton.pressed.connect(mostrar_categoria.bind(i))
 		i += 1
+
+
+# Punto de color en la esquina de la pestaña: verde = listo, amarillo = falta o aviso, rojo = error, gris = opcional.
+func _crear_indicador(boton: Button, sub: String) -> void:
+	var punto := ColorRect.new()
+	punto.custom_minimum_size = TAM_INDICADOR
+	punto.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	punto.color = COLOR_OPCIONAL
+	boton.add_child(punto)
+	punto.set_anchors_and_offsets_preset(Control.PRESET_TOP_RIGHT)
+	indicadores[sub] = punto
 
 
 func preparar_barras() -> void:
@@ -479,6 +610,7 @@ func preparar_barras() -> void:
 		barra.max_value = 100.0
 		barra.value = 0.0
 		barra.show_percentage = false
+		barra.tooltip_text = _s("tip_bar_" + clave)   # explica qué mide (se completa con el desglose al actualizar)
 
 		var relleno := StyleBoxFlat.new()
 		relleno.bg_color = COLOR_OK
@@ -545,7 +677,7 @@ func _on_lanzar() -> void:
 	construyendo = false
 	actualizar_resumen()
 
-	# Deja programado el teletransporte de main_character a (860, 160)
+	# Deja programado el teletransporte de main_character a (845, 160)
 	GameManager.solicitar_teletransporte_player(Vector2(845, 160))
 
 	# Si space_center sigue cargado detrás (en GUI), solo oculta el panel;
@@ -563,6 +695,8 @@ func _on_lanzar() -> void:
 		get_tree().change_scene_to_file(escena_siguiente)
 	else:
 		push_error("Asigna 'space_center.tscn' en la propiedad 'Escena Siguiente' del Inspector.")
+
+
 # Guarda el lanzamiento (con la nave adentro, para que la etapa siguiente solo lea este archivo)
 # y lo registra en GameState como la misión lista.
 func guardar_cohete() -> Dictionary:
@@ -601,7 +735,7 @@ func guardar_cohete() -> Dictionary:
 	print("Cohete guardado en: ", ProjectSettings.globalize_path(RUTA_LANZAMIENTO))
 	if estado:
 		estado.registrar_cohete(datos)     # la misión (nave + cohete) queda en el autoload
-	# --- NUEVO: Registrar cohete, fiabilidad y vulnerabilidades en GameManager ---
+	# --- Registrar cohete, fiabilidad y vulnerabilidades en GameManager ---
 	var avisos_cohete: Array = evaluar(t)["avisos"]
 	var riesgo_por_fiabilidad := (1.0 - float(t["fiab"])) * 100.0
 	var riesgo_total_cohete := riesgo_por_fiabilidad + (float(avisos_cohete.size()) * 5.0)
@@ -712,6 +846,7 @@ func _estilo_pestana(boton: Button, color: Color) -> void:
 
 func mostrar_categoria(indice: int) -> void:
 	tooltip.hide()
+	categoria_actual = indice
 	var sub: String = CATEGORIAS[indice]
 	ids_en_slots.clear()
 	for id in cohete:
@@ -735,6 +870,7 @@ func mostrar_categoria(indice: int) -> void:
 			boton.text = ""
 			boton.icon = null
 	_refrescar_casillas()
+	actualizar_resumen()      # el consejo (TIP) cambia con la pestaña
 
 
 # ---------- Hover y tooltip ----------
@@ -774,10 +910,12 @@ func _crear_tooltip() -> void:
 	tt_titulo = _nueva_etiqueta(Color("ffe9b8"), 3)
 	tt_resumen = _nueva_etiqueta(Color("f2e6d8"), 3)
 	tt_stats = _nueva_etiqueta(Color("9fd8d8"), 3)
+	tt_delta = _nueva_etiqueta(Color("c8e6a0"), 3)
 	tt_aviso = _nueva_etiqueta(Color("ff9d8a"), 3)
 	caja.add_child(tt_titulo)
 	caja.add_child(tt_resumen)
 	caja.add_child(tt_stats)
+	caja.add_child(tt_delta)
 	caja.add_child(tt_aviso)
 	tooltip.hide()
 	add_child(tooltip)
@@ -818,11 +956,35 @@ func _mostrar_tooltip(id: String) -> void:
 	tt_resumen.text = q.get("resumen", "")
 	tt_resumen.visible = tt_resumen.text != ""
 	tt_stats.text = _stats_pieza(id)
+	tt_delta.text = _delta_texto(id)
+	tt_delta.visible = tt_delta.text != ""
 	tt_aviso.text = _razon_bloqueo(id)
 	tt_aviso.visible = tt_aviso.text != ""
 	tooltip.reset_size()
 	tooltip.show()
 	_posicionar_tooltip()
+
+
+# EFECTO de elegir la pieza (o de quitarla, si es opcional y ya está elegida): sustentación libre, delta-v, costo y fiabilidad.
+# Muestra los compromisos del diseño: un motor mejor sube el costo, un booster suma sustentación pero no combustible, etc.
+func _delta_texto(id: String) -> String:
+	var sub: String = cohete[id].get("subcategoria", "")
+	var quitando := seleccion.has(id)
+	if quitando and UNICAS.has(sub):
+		return ""     # ya está elegida y las "únicas" no se pueden dejar vacías
+	var antes := calcular(seleccion)
+	var sim: Array = seleccion.duplicate()
+	if quitando:
+		sim.erase(id)
+	else:
+		_aplicar_en(sim, id)
+	var despues := calcular(sim)
+	var s := _s("d_remove") if quitando else _s("d_add")
+	s += "\n" + _s("d_lift") % [_kg(antes["cap"] - antes["carga"]), _kg(despues["cap"] - despues["carga"])]
+	s += " | " + _s("d_dv") % [int(antes["dv_disp"]), int(despues["dv_disp"]), int(despues["dv_req"])]
+	s += "\n" + _s("d_cost") % [_dinero(antes["costo"]), _dinero(despues["costo"])]
+	s += " | " + _s("d_rel") % [roundi(float(antes["fiab"]) * 100.0), roundi(float(despues["fiab"]) * 100.0)]
+	return s
 
 
 func _posicionar_tooltip() -> void:
@@ -843,38 +1005,53 @@ func _dinero(v: float) -> String:
 
 # ---------- Validación, barras y resumen ----------
 
-# Revisa TODO lo que debe cumplir el cohete. Devuelve {"errores": [...], "avisos": [...]}.
-# Los errores impiden crear el cohete; los avisos solo informan.
+# Registra un error. clave = renglón del checklist al que pertenece ("" = no pertenece a ninguno).
+func _anotar(res: Dictionary, clave: String, msg: String) -> void:
+	res["errores"].append(msg)
+	if clave == "":
+		res["globales"].append(msg)
+		return
+	if not res["por_clave"].has(clave):
+		res["por_clave"][clave] = []
+	res["por_clave"][clave].append(msg)
+
+
+# Revisa TODO lo que debe cumplir el cohete. Devuelve:
+#   errores   = todos (impiden crear el cohete)
+#   avisos    = solo informan
+#   globales  = errores que no pertenecen a un renglón del checklist
+#   por_clave = renglón del checklist -> errores de ese renglón
+#   vuln      = cuántas piezas de la nave son vulnerables a un evento que el cohete no mitiga
 func evaluar(t: Dictionary) -> Dictionary:
 	var subs: Dictionary = t["subs"]
-	var errores := []
-	var avisos := []
+	var res := {"errores": [], "avisos": [], "globales": [], "por_clave": {}, "vuln": 0}
 
 	# 1) Piezas obligatorias
 	for sub in UNICAS:
 		if not subs.has(sub):
-			errores.append(_s("missing") % String(NOMBRES_CATEGORIA[sub]).to_lower())
+			_anotar(res, sub, _s("missing") % _nombre_sub(sub).to_lower())
 
 	# 2) Límites físicos contra la nave
 	if subs.has("motor"):
 		if t["carga"] > t["cap"]:
-			errores.append(_s("overweight") % [_kg(t["carga"]), _kg(t["cap"])])
+			_anotar(res, "carga", _s("overweight") % [_kg(t["carga"]), _kg(t["cap"])])
 		if t["necesario"] > t["cap_comb"]:
-			errores.append(_s("no_fuel") % [_kgc(t["necesario"]), _kgc(t["cap_comb"])])
+			_anotar(res, "combustible", _s("no_fuel") % [_kgc(t["necesario"]), _kgc(t["cap_comb"])])
 	if subs.has("cofia") and nave_slots > t["cap_slots"]:
-		errores.append(_s("no_slots") % [int(nave_slots), int(t["cap_slots"])])
+		_anotar(res, "cofia", _s("no_slots") % [int(nave_slots), int(t["cap_slots"])])
 	for r in requiere_nave:
 		if cohete.has(r) and not t["ids"].has(r):
-			errores.append(_s("needs") % cohete[r]["nombre"])
+			_anotar(res, String(cohete[r].get("subcategoria", "")), _s("needs") % cohete[r]["nombre"])
 	if t["costo"] > restante:
-		errores.append(_s("over_budget") % [_dinero(t["costo"]), _dinero(restante)])
+		_anotar(res, "presupuesto", _s("over_budget") % [_dinero(t["costo"]), _dinero(restante)])
 
 	# 3) Compatibilidad entre las piezas del cohete (requiere / requiere_alguno_de / incompatible)
 	for id in t["ids"]:
 		var q: Dictionary = cohete[id]
+		var sub_q: String = q.get("subcategoria", "")
 		for r in q.get("requiere", []):
 			if cohete.has(r) and not t["ids"].has(r):
-				errores.append(_s("req") % [_nombre_corto(id), _nombre_corto(r)])
+				_anotar(res, sub_q, _s("req") % [_nombre_corto(id), _nombre_corto(r)])
 		var alguno: Array = q.get("requiere_alguno_de", [])
 		if alguno.size() > 0:
 			var hay := false
@@ -882,10 +1059,10 @@ func evaluar(t: Dictionary) -> Dictionary:
 				if t["ids"].has(r):
 					hay = true
 			if not hay:
-				errores.append(_s("req_one") % [_nombre_corto(id), ", ".join(_nombres_cortos(alguno))])
+				_anotar(res, sub_q, _s("req_one") % [_nombre_corto(id), ", ".join(_nombres_cortos(alguno))])
 		for inc in q.get("incompatible", []):
 			if t["ids"].has(inc):
-				errores.append(_s("incomp") % [_nombre_corto(id), _nombre_corto(inc)])
+				_anotar(res, sub_q, _s("incomp") % [_nombre_corto(id), _nombre_corto(inc)])
 
 	# 4) Avisos: penalizaciones del cohete (mirando también las piezas de la nave) y piezas vulnerables.
 	var todos: Array = t["ids"].duplicate()
@@ -903,14 +1080,118 @@ func evaluar(t: Dictionary) -> Dictionary:
 					if todos.has(x):
 						falta = false
 			if falta:
-				avisos.append("%s: %s" % [_nombre_corto(id), String(pe["efecto"]).replace("_", " ")])
+				res["avisos"].append("%s: %s" % [_nombre_corto(id), String(pe["efecto"]).replace("_", " ")])
 	for ev in t["eventos"]:
 		if t["mitiga"].has(ev):
 			continue
 		for pid in piezas_nave:
 			if piezas_nave[pid].get("vulnerable_a", []).has(ev):
-				avisos.append(_s("vuln") % [piezas_nave[pid]["nombre"], String(ev).replace("_", " ")])
-	return {"errores": errores, "avisos": avisos}
+				res["avisos"].append(_s("vuln") % [piezas_nave[pid]["nombre"], String(ev).replace("_", " ")])
+				res["vuln"] += 1
+	return res
+
+
+# Un renglón por requisito: [x] listo, [ ] falta, [!] error, [~] aviso, [-] opcional sin elegir.
+# Devuelve [{"clave", "nombre", "estado", "detalle"}, ...] en el orden de FILAS.
+func _filas_checklist(t: Dictionary, ev: Dictionary) -> Array:
+	var subs: Dictionary = t["subs"]
+	var por: Dictionary = ev["por_clave"]
+	var filas := []
+	for clave in FILAS:
+		var nombre := ""
+		if CATEGORIAS.has(clave):
+			nombre = _nombre_sub(clave)
+		else:
+			nombre = _s("row_" + clave)
+		var st := "ok"
+		var detalle := ""
+		match clave:
+			"cofia":
+				if not subs.has("cofia"):
+					st = "falta"
+				else:
+					detalle = _s("fairing_detail") % [int(nave_slots), int(t["cap_slots"])]
+			"motor":
+				if not subs.has("motor"):
+					st = "falta"
+				else:
+					detalle = _s("engine_detail") % [int(t["isp"]), _kgc(t["cap_comb"])]
+			"avionica":
+				if not subs.has("avionica"):
+					st = "falta"
+				else:
+					detalle = _nombre_corto(subs["avionica"])
+			"booster":
+				if subs.has("booster"):
+					var b: Dictionary = cohete[subs["booster"]]
+					detalle = _s("boost_detail") % _kg(float(b.get("aporta_capacidad_masa", 0.0)))
+				else:
+					st = "opcional"
+					detalle = _s("optional")
+			"proteccion":
+				if subs.has("proteccion"):
+					detalle = _nombre_corto(subs["proteccion"])
+				elif int(ev["vuln"]) > 0:
+					st = "aviso"
+					detalle = _s("prot_hint")
+				else:
+					st = "opcional"
+					detalle = _s("optional")
+			"carga":
+				if not subs.has("motor"):
+					st = "falta"
+					detalle = _s("need_engine")
+				else:
+					detalle = "%d / %d kg" % [_kg(t["carga"]), _kg(t["cap"])]
+			"combustible":
+				if not subs.has("motor"):
+					st = "falta"
+					detalle = _s("need_engine")
+				else:
+					detalle = _s("dv") % [int(t["dv_disp"]), int(t["dv_req"])]
+			"presupuesto":
+				detalle = _s("budget_left") % _dinero(restante - t["costo"])
+		if st != "falta" and por.has(clave):
+			st = "error"
+			var msgs: Array = por[clave]
+			detalle = String(msgs[0])
+			if msgs.size() > 1:
+				detalle += _s("more_errs") % (msgs.size() - 1)
+		if st == "falta" and detalle == "":
+			detalle = _s("add_one")
+		filas.append({"clave": clave, "nombre": nombre, "estado": st, "detalle": detalle})
+	return filas
+
+
+func _texto_checklist(filas: Array) -> String:
+	var marcas := {"ok": "[x]", "falta": "[ ]", "error": "[!]", "aviso": "[~]", "opcional": "[-]"}
+	var txt := _s("check") + "\n"
+	for f in filas:
+		txt += "%s %s: %s\n" % [marcas[f["estado"]], f["nombre"], f["detalle"]]
+	return txt
+
+
+# Punto de color de cada pestaña = el peor estado de los renglones que le tocan.
+func _actualizar_indicadores(filas: Array) -> void:
+	var rango := {"opcional": 0, "ok": 1, "aviso": 2, "falta": 3, "error": 4}
+	var peor := {}
+	for f in filas:
+		var tab: String = PESTANA_DE_FILA.get(f["clave"], "")
+		if tab == "":
+			continue
+		if not peor.has(tab) or rango[f["estado"]] > rango[peor[tab]]:
+			peor[tab] = f["estado"]
+	for sub in indicadores:
+		var punto: ColorRect = indicadores[sub]
+		match String(peor.get(sub, "ok")):
+			"error":
+				punto.color = COLOR_MAL
+			"falta", "aviso":
+				punto.color = COLOR_CERCA
+			"opcional":
+				punto.color = COLOR_OPCIONAL
+			_:
+				punto.color = COLOR_OK
 
 
 func _actualizar_barra(clave: String, usado: float, maximo: float, texto: String) -> void:
@@ -935,6 +1216,44 @@ func _actualizar_barra(clave: String, usado: float, maximo: float, texto: String
 	etiqueta.text = texto
 
 
+# Tooltip de la barra: qué mide + el desglose de dónde sale cada número.
+func _tooltip_barra(clave: String, detalle: String) -> void:
+	if not barras.has(clave):
+		return
+	var barra: ProgressBar = barras[clave]["barra"]
+	var base := _s("tip_bar_" + clave)
+	barra.tooltip_text = base if detalle == "" else base + "\n\n" + detalle
+
+
+func _desglose(clave: String, t: Dictionary) -> String:
+	var lineas := PackedStringArray()
+	match clave:
+		"carga":
+			lineas.append(_s("ship_kg") % _kg(nave_masa))
+			for id in t["ids"]:
+				var q: Dictionary = cohete[id]
+				if q.get("masa_cuenta_como_carga", true) and float(q["masa"]) > 0.0:
+					lineas.append(_s("mass_line") % [_nombre_corto(id), _kg(float(q["masa"]))])
+			for id in t["ids"]:
+				var q: Dictionary = cohete[id]
+				var lift := float(q.get("aporta_capacidad_masa", 0.0)) + float(q.get("ajuste_capacidad_masa", 0.0))
+				if lift != 0.0:
+					lineas.append(_s("lift_line") % [_nombre_corto(id), _kg(lift)])
+		"espacios":
+			lineas.append(_s("slots_need") % int(nave_slots))
+			lineas.append(_s("slots_have") % int(t["cap_slots"]))
+		"presupuesto":
+			for id in t["ids"]:
+				lineas.append("%s: %s" % [_nombre_corto(id), _dinero(cohete[id]["precio_juego"])])
+		"combustible":
+			lineas.append(_s("to_dest") % [destino.replace("_", " "), int(t["dv_req"])])
+			if float(t["isp"]) > 0.0:
+				lineas.append(_s("isp_line") % int(t["isp"]))
+			lineas.append(_s("fuel_line") % [_kgc(t["necesario"]), _kgc(t["cap_comb"])])
+			lineas.append(_s("dv_line") % int(t["dv_disp"]))
+	return "\n".join(lineas)
+
+
 func actualizar_resumen() -> void:
 	var t := calcular(seleccion)
 
@@ -946,10 +1265,12 @@ func actualizar_resumen() -> void:
 		"%s / %s" % [_dinero(t["costo"]), _dinero(restante)])
 	_actualizar_barra("combustible", t["necesario"], t["cap_comb"],
 		"%d / %d kg" % [_kgc(t["necesario"]), _kgc(t["cap_comb"])])
+	for clave in NOMBRES_BARRAS:
+		_tooltip_barra(clave, _desglose(clave, t))
 
 	var ev := evaluar(t)
-	var errores: Array = ev["errores"]
-	var avisos: Array = ev["avisos"]
+	var filas := _filas_checklist(t, ev)
+	_actualizar_indicadores(filas)
 
 	var ns := PackedStringArray()
 	for id in t["ids"]:
@@ -958,11 +1279,21 @@ func actualizar_resumen() -> void:
 	txt += _s("dest") % destino.replace("_", " ") + "\n"
 	txt += _s("dv") % [int(t["dv_disp"]), int(t["dv_req"])] + "\n"
 	txt += _s("reliab") % int(round(float(t["fiab"]) * 100.0)) + "\n"
-	for e in errores:
+	var lista := _texto_checklist(filas)
+	if label_checklist:
+		label_checklist.text = lista
+	else:
+		txt += "\n" + lista
+	for e in ev["globales"]:
 		txt += _s("err") + ": " + e + "\n"
-	for a in avisos:
+	for a in ev["avisos"]:
 		txt += _s("warn") + ": " + a + "\n"
+	var consejo := _s("tip_" + String(CATEGORIAS[categoria_actual]))
+	if label_consejo:
+		label_consejo.text = consejo
+	else:
+		txt += "\n" + _s("tip") + ": " + consejo
 	if label_resumen:
 		label_resumen.text = txt
 	if boton_construir:
-		boton_construir.disabled = errores.size() > 0 or construyendo
+		boton_construir.disabled = ev["errores"].size() > 0 or construyendo

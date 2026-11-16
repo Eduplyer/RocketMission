@@ -160,7 +160,7 @@ grow_horizontal = 0
 grow_vertical = 0
 theme_override_fonts/font = ExtResource("3_iol0s")
 theme_override_font_sizes/font_size = 7
-text = "Siguiente
+text = "Next
 "
 
 [node name="Pestanas" type="VBoxContainer" parent="."]
