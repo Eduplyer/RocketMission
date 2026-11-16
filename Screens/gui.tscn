@@ -1,10 +1,11 @@
-[gd_scene load_steps=6 format=3 uid="uid://bpijyfxp1087s"]
+[gd_scene load_steps=7 format=3 uid="uid://bpijyfxp1087s"]
 
 [ext_resource type="PackedScene" uid="uid://bt3l75cgr6rg7" path="res://Screens/gmat.tscn" id="1_jf5eo"]
 [ext_resource type="PackedScene" uid="uid://d4jpbscp864x5" path="res://Interactives/book.tscn" id="2_vve12"]
 [ext_resource type="PackedScene" uid="uid://cqpf40qxyourm" path="res://Screens/missionselect.tscn" id="3_8cpj3"]
 [ext_resource type="PackedScene" uid="uid://dpng0frv0a105" path="res://Screens/build_rocket.tscn" id="4_vmnxo"]
 [ext_resource type="PackedScene" uid="uid://b6218o7ol3pgu" path="res://Screens/space_screen.tscn" id="5_ag7g3"]
+[ext_resource type="PackedScene" uid="uid://sovu5jh226sc" path="res://Screens/Curriculum select.tscn" id="6_1d0fq"]
 
 [node name="GUI" type="CanvasLayer"]
 
@@ -21,4 +22,7 @@ visible = false
 visible = false
 
 [node name="space screen" parent="." instance=ExtResource("5_ag7g3")]
+visible = false
+
+[node name="curriculum" parent="." instance=ExtResource("6_1d0fq")]
 visible = false

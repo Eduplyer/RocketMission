@@ -6,8 +6,8 @@ signal mision_fallida(motivo: String, resumen: Dictionary)
 
 @export_group("Archivo JSON y Eventos")
 @export_file("*.json") var ruta_json := "res://Assets/eventos_aleatorios.json"
-@export var min_eventos := 2
-@export var max_eventos := 5
+@export var min_eventos := 5
+@export var max_eventos := 9
 
 @export_group("Ajustes de Vuelo")
 @export var segundos_por_dia := 2.0
@@ -386,11 +386,22 @@ func _activar_game_over(motivo: String) -> void:
 		"fallos": fallos_cometidos,
 		"progreso": slider_progreso.value
 	}
+	
+	# Guarda la causa del fallo y el progreso en GameManager para mostrarlos en GameOver.tscn
+	if GameManager.has_method("registrar_resultado_final"):
+		GameManager.registrar_resultado_final(false, motivo, resumen)
+		
 	mision_fallida.emit(motivo, resumen)
 	print("[SpaceScreen] GAME OVER -> ", motivo, " | ", resumen)
+	
 	label_hud.text = "MISSION FAILED - INTEGRITY 0%"
 	label_hud.add_theme_color_override("font_color", Color(1.0, 0.3, 0.3))
-
+	
+	# Pausa breve para que se lea el aviso rojo antes de cambiar de escena
+	await get_tree().create_timer(1.5).timeout
+	var err := get_tree().change_scene_to_file("res://Interactives/GameOver.tscn")
+	if err != OK:
+		push_error("No se pudo abrir res://Screens/GameOver.tscn. Revisa que el nombre y mayúsculas coincidan.")
 
 func _activar_win() -> void:
 	vuelo_activo = false

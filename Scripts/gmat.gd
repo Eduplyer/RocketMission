@@ -32,8 +32,8 @@ func save_data() -> void:
 		"inclination": inclination_saved,
 		"circularity": circularity_saved
 	}
-	label_inclination.text = "Inclinación: %.1f°" % inclination_saved
-	label_circularity.text = "Circularidad: %d%%" % int(circularity_saved)
+	label_inclination.text = "Inclinatión: %.1f°" % inclination_saved
+	label_circularity.text = "Circularity: %d%%" % int(circularity_saved)
 
 func obtener_datos_para_calculo() -> Dictionary:
 	save_data()

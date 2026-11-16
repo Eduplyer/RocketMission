@@ -542,14 +542,14 @@ func _on_lanzar() -> void:
 	_mostrar_mensaje(_s("built_title"), _texto_exito(t), true, 0.0)
 	await get_tree().create_timer(DURACION_MENSAJE).timeout
 	mensaje.hide()
+	await get_tree().create_timer(DURACION_MENSAJE).timeout
+	mensaje.hide()
 	construyendo = false
 	actualizar_resumen()
 
-	# Deja programado el teletransporte de main_character a (860, 160)
-	GameManager.solicitar_teletransporte_player(Vector2(845, 160))
+	# Abre la pantalla de selección de astronautas como paso siguiente obligatorio
+	GameManager.solicitar_abrir_astronautas()
 
-	# Si space_center sigue cargado detrás (en GUI), solo oculta el panel;
-	# si se descargó al cambiar de escena, vuelve a cargar space_center.tscn.
 	var escena_actual := get_tree().current_scene
 	var player_en_escena := escena_actual != null and (
 		escena_actual.find_child("main_character", true, false) != null or
@@ -563,8 +563,7 @@ func _on_lanzar() -> void:
 		get_tree().change_scene_to_file(escena_siguiente)
 	else:
 		push_error("Asigna 'space_center.tscn' en la propiedad 'Escena Siguiente' del Inspector.")
-# Guarda el lanzamiento (con la nave adentro, para que la etapa siguiente solo lea este archivo)
-# y lo registra en GameState como la misión lista.
+
 func guardar_cohete() -> Dictionary:
 	var t := calcular(seleccion)
 	var datos := {
