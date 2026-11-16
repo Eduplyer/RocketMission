@@ -1,114 +1,114 @@
 extends CanvasLayer
 
-
+# 1. Orbital telemetry guides (Translated to English)
 var orbitas := [
 	{
 		"tipo": "orbita",
-		"nombre": "Órbita Ecuatorial Baja (LEO)",
-		"imagen": "res://Assets/Map1.png", 
-		"patron": "Línea horizontal plana sobre el ecuador sin subir ni bajar hacia los polos.",
-		"rangos": "• [b]Altitud:[/b] 400 – 600 km\n• [b]Inclinación:[/b] 0° – 5°\n• [b]Circularidad:[/b] 95% – 100%",
-		"tip": "Si la traza no forma ondas y cruza el mapa rápido de izquierda a derecha, estás ante una órbita baja y ecuatorial."
+		"nombre": "Low Equatorial Orbit (LEO)",
+		"imagen": "res://Assets/Map1.png",
+		"patron": "Flat horizontal line along the equator without rising or dipping toward the poles.",
+		"rangos": "• [b]Altitude:[/b] 400 – 600 km\n• [b]Inclination:[/b] 0° – 5°\n• [b]Circularity:[/b] 95% – 100%",
+		"tip": "If the ground track forms no waves and crosses the map quickly from left to right, it is a low equatorial orbit."
 	},
 	{
 		"tipo": "orbita",
-		"nombre": "Órbita Inclinada (Tipo ISS)",
+		"nombre": "Inclined Orbit (ISS Type)",
 		"imagen": "res://Assets/Map2.png",
-		"patron": "2 ondas suaves y simétricas que suben y bajan hasta la mitad de cada hemisferio.",
-		"rangos": "• [b]Altitud:[/b] 380 – 450 km\n• [b]Inclinación:[/b] 50° – 55°\n• [b]Circularidad:[/b] 95% – 100%",
-		"tip": "La altura máxima que alcanza la cresta de la onda en el mapa te indica directamente los grados de inclinación."
+		"patron": "2 smooth, symmetrical waves rising and dipping halfway into each hemisphere.",
+		"rangos": "• [b]Altitude:[/b] 380 – 450 km\n• [b]Inclination:[/b] 50° – 55°\n• [b]Circularity:[/b] 95% – 100%",
+		"tip": "The maximum latitude reached by the wave's peak directly indicates the inclination angle in degrees."
 	},
 	{
 		"tipo": "orbita",
-		"nombre": "Órbita Polar / Heliosíncrona",
+		"nombre": "Polar / Sun-Synchronous Orbit",
 		"imagen": "res://Assets/Map3.png",
-		"patron": "3 ondas muy pronunciadas que llegan hasta los bordes superior e inferior del mapa.",
-		"rangos": "• [b]Altitud:[/b] 700 – 900 km\n• [b]Inclinación:[/b] 90° – 100°\n• [b]Circularidad:[/b] 95% – 100%",
-		"tip": "Cuando las curvas tocan ambos polos y ves varias pasadas juntas, es un satélite de observación terrestre."
+		"patron": "3 steep waves reaching all the way to the top and bottom edges of the map.",
+		"rangos": "• [b]Altitude:[/b] 700 – 900 km\n• [b]Inclination:[/b] 90° – 100°\n• [b]Circularity:[/b] 95% – 100%",
+		"tip": "When curves touch both poles with multiple closely spaced passes, it is an Earth observation satellite."
 	},
 	{
 		"tipo": "orbita",
-		"nombre": "Órbita Geoestacionaria (GEO)",
+		"nombre": "Geostationary Orbit (GEO)",
 		"imagen": "res://Assets/Map4.png",
-		"patron": "Un único punto fijo (o un trazo diminuto) sobre el ecuador que no avanza por el mapa.",
-		"rangos": "• [b]Altitud:[/b] 35,500 – 36,000 km\n• [b]Inclinación:[/b] 0° – 2°\n• [b]Circularidad:[/b] 98% – 100%",
-		"tip": "Al estar tan alto, tarda 24 horas en dar una vuelta: gira al mismo ritmo que la Tierra y parece inmóvil."
+		"patron": "A single fixed dot (or tiny figure-eight) over the equator that does not move across the map.",
+		"rangos": "• [b]Altitude:[/b] 35,500 – 36,000 km\n• [b]Inclination:[/b] 0° – 2°\n• [b]Circularity:[/b] 98% – 100%",
+		"tip": "At this extreme height, one orbit takes 24 hours: it matches Earth's rotation and appears stationary."
 	},
 	{
 		"tipo": "orbita",
-		"nombre": "Órbita Muy Excéntrica (Molniya)",
+		"nombre": "Highly Eccentric Orbit (Molniya / Transfer)",
 		"imagen": "res://Assets/Map5.png",
-		"patron": "Onda deformada y asimétrica que forma bucles cerrados en la parte norte del mapa.",
-		"rangos": "• [b]Altitud media:[/b] 19,000 – 21,000 km\n• [b]Inclinación:[/b] 60° – 65°\n• [b]Circularidad:[/b] 20% – 30%",
-		"tip": "Si la onda pierde su forma de 'S' limpia y hace rizos en un extremo, la circularidad es muy baja (órbita alargada)."
+		"patron": "Distorted, asymmetrical wave forming tight loops or a single elongated arc across the map.",
+		"rangos": "• [b]Mean Altitude:[/b] 19,000 – 21,000 km\n• [b]Inclination:[/b] 60° – 65°\n• [b]Circularity:[/b] 5% – 30%",
+		"tip": "If the wave loses its clean 'S' shape or stretches into a massive single arc, circularity is very low (elongated ellipse)."
 	}
 ]
 
-# 2. Tus páginas originales de fallas
+# 2. Rocket & mission failure guides (Translated to English)
 var fallas := [
 	{
-		"nombre": "Paracaídas",
+		"nombre": "Parachute",
 		"prob": "20-25",
-		"causa": "Mal doblado, cuerdas enredadas, ojiva atorada o protección térmica quemada.",
-		"caso": "Soyuz 1 (1967): los paracaídas fallaron en el regreso.",
-		"solucion": "Doblar bien el paracaídas, usar protección contra el calor, revisar que la ojiva salga libre y probar la separación en tierra antes de lanzar."
+		"causa": "Improper folding, tangled shroud lines, stuck nose cone, or burned thermal wadding.",
+		"caso": "Soyuz 1 (1967): Parachutes failed to deploy properly during reentry.",
+		"solucion": "Pack the parachute neatly, use heat-resistant wadding, ensure a loose nose cone fit, and ground-test deployment before launch."
 	},
 	{
-		"nombre": "Ignición",
+		"nombre": "Ignition",
 		"prob": "15-20",
-		"causa": "Contacto eléctrico suelto, batería débil o encendedor mal colocado.",
-		"caso": "Transbordador STS-41-D (1984): se canceló el despegue a segundos de salir por un fallo en el encendido de un motor.",
-		"solucion": "Revisar el cableado, usar batería cargada, colocar bien el encendedor dentro del motor y probar la continuidad antes de la cuenta regresiva."
+		"causa": "Loose electrical contact, weak battery, or improperly seated igniter.",
+		"caso": "Space Shuttle STS-41-D (1984): Launch aborted seconds before liftoff due to an engine ignition failure.",
+		"solucion": "Inspect wiring, use a fully charged battery, seat the igniter deep inside the motor, and run a continuity check before countdown."
 	},
 	{
-		"nombre": "Aletas mal alineadas",
+		"nombre": "Misaligned Fins",
 		"prob": "10-15",
-		"causa": "Aletas torcidas, mal pegadas o centro de gravedad mal ubicado.",
-		"caso": "Error muy común en cohetes a escala: el cohete gira o se inclina.",
-		"solucion": "Alinear las aletas con una guía, pegarlas firmes y comprobar el centro de gravedad antes del vuelo."
+		"causa": "Warped fins, weak glue joints, or poorly balanced center of gravity.",
+		"caso": "Common scale-rocketry failure: the vehicle spins or pitches off course.",
+		"solucion": "Align fins using an alignment jig, reinforce fillets, and verify the center of gravity before flight."
 	},
 	{
-		"nombre": "Retardo del motor incorrecto",
+		"nombre": "Wrong Motor Delay",
 		"prob": "8-12",
-		"causa": "El peso real del cohete no coincide con el motor elegido, y el paracaídas sale tarde o muy pronto.",
-		"caso": "Luna 25 (2023): el motor encendió más tiempo del planeado y la sonda se estrelló.",
-		"solucion": "Pesar el cohete antes de lanzar y elegir el motor y el tiempo de retardo adecuados para ese peso."
+		"causa": "Actual rocket mass does not match the selected motor, deploying the parachute too early or too late.",
+		"caso": "Luna 25 (2023): Engine burned longer than planned, causing the probe to crash.",
+		"solucion": "Weigh the fully assembled rocket before launch and select a motor with the proper ejection delay for that mass."
 	},
 	{
-		"nombre": "Ojiva y acople",
+		"nombre": "Nose Cone & Coupling",
 		"prob": "5-8",
-		"causa": "La ojiva queda muy floja y se suelta, o muy apretada y no se separa.",
-		"caso": "Taurus XL (2009): la cubierta no se separó y se perdió la misión.",
-		"solucion": "Ajustar la ojiva para que quede firme pero deslice libre, y revisar los orificios de ventilación del altímetro."
+		"causa": "Nose cone is either too loose (separates early) or too tight (fails to eject).",
+		"caso": "Taurus XL (2009): Payload fairing failed to separate, resulting in mission loss.",
+		"solucion": "Sand or tape the shoulder so it slides smoothly without wobble, and check altimeter vent holes."
 	},
 	{
-		"nombre": "Guías de lanzamiento",
+		"nombre": "Launch Guides",
 		"prob": "4-6",
-		"causa": "Guía sucia, chueca o con fricción, que frena y desvía el cohete al salir.",
-		"caso": "Error típico de montaje en cohetes a escala.",
-		"solucion": "Limpiar la guía, ponerla bien vertical y comprobar que el cohete se deslice sin atorarse."
+		"causa": "Dirty, bent, or high-friction launch rod/rail that slows and deflects the rocket at liftoff.",
+		"caso": "Typical launch-pad setup error in scale rocketry.",
+		"solucion": "Clean the launch rail, verify vertical alignment, and check that lugs slide freely without binding."
 	},
 	{
-		"nombre": "Motor mal sujeto",
+		"nombre": "Loose Motor Mount",
 		"prob": "3-5",
-		"causa": "El motor no tiene tope o retenedor y se mueve o sale disparado hacia atrás.",
-		"caso": "Falla de armado en el compartimento del motor.",
-		"solucion": "Colocar el tope y el retenedor del motor y verificar que no se mueva antes de lanzar."
+		"causa": "Missing thrust ring or retainer clip, allowing the motor to shift or eject out the back.",
+		"caso": "Structural assembly failure inside the motor compartment.",
+		"solucion": "Install a proper thrust block and positive motor retainer, confirming zero play before launch."
 	},
 	{
-		"nombre": "Fuselaje y carga útil",
+		"nombre": "Airframe & Payload",
 		"prob": "2-4",
-		"causa": "Tubo dañado, mal pegado, o carga suelta que cambia el equilibrio.",
-		"caso": "Apolo 6 (1968): fuertes vibraciones dañaron la estructura del cohete.",
-		"solucion": "Reforzar las uniones, fijar bien la carga útil y revisar que no haya grietas."
+		"causa": "Damaged body tube, weak joints, or loose payload shifting the vehicle's balance.",
+		"caso": "Apollo 6 (1968): Severe pogo oscillations damaged structural adapters.",
+		"solucion": "Reinforce airframe couplers, secure all internal payloads, and inspect tubes for creases or cracks."
 	},
 	{
-		"nombre": "Explosión del motor (CATO)",
+		"nombre": "Motor Explosion (CATO)",
 		"prob": "1-2",
-		"causa": "Motor con grietas o defectos que revienta al encenderse.",
-		"caso": "Antares (2014): explotó a los pocos segundos del despegue, con probable falla en una turbobomba.",
-		"solucion": "Revisar el motor antes de usarlo, no usar motores dañados y mantener distancia de seguridad."
-	},
+		"causa": "Cracked propellant grain or casing defect causing the motor to rupture upon ignition.",
+		"caso": "Antares (2014): Exploded seconds after liftoff due to a suspected turbopump failure.",
+		"solucion": "Inspect motors for cracks or moisture damage before use, discard defective units, and keep a safe distance."
+	}
 ]
 
 var paginas: Array = []
@@ -126,8 +126,11 @@ func _ready() -> void:
 	hoja_izq = find_child("Hoja_IZQ", true, false)
 	hoja_der = find_child("Hoja_DER", true, false)
 	if hoja_izq == null or hoja_der == null:
-		push_error("No encuentro Hoja_IZQ o Hoja_DER. Revisa los nombres.")
+		push_error("Cannot find Hoja_IZQ or Hoja_DER. Check node names.")
 		return
+
+	# Page 0 is ALWAYS the active mission summary
+	paginas.append({"tipo": "mision"})
 	paginas.append_array(orbitas)
 	for f in fallas:
 		f["tipo"] = "falla"
@@ -137,12 +140,25 @@ func _ready() -> void:
 	texto_der = _crear_texto(hoja_der)
 	imagen_izq = _crear_imagen(hoja_izq)
 	
-	btn_prev = _crear_boton(hoja_izq, "◀ Anterior", true)
-	btn_next = _crear_boton(hoja_der, "Siguiente ▶", false)
+	btn_prev = _crear_boton(hoja_izq, "◀ Prev", true)
+	btn_next = _crear_boton(hoja_der, "Next ▶", false)
 	btn_prev.pressed.connect(_anterior)
 	btn_next.pressed.connect(_siguiente)
 
+	# Refresh mission info every time the book is opened with Tab or a mission is accepted
+	visibility_changed.connect(_on_visibility_changed)
+	if GmatManager.has_signal("mision_aceptada"):
+		GmatManager.mision_aceptada.connect(_on_mision_aceptada)
+
 	visible = false
+	_mostrar_pagina()
+
+func _on_visibility_changed() -> void:
+	if visible:
+		_mostrar_pagina()
+
+func _on_mision_aceptada(_mision: Dictionary) -> void:
+	indice = 0
 	_mostrar_pagina()
 
 func _crear_texto(padre: Control) -> RichTextLabel:
@@ -153,6 +169,8 @@ func _crear_texto(padre: Control) -> RichTextLabel:
 	t.add_theme_color_override("default_color", Color.WHITE)
 	t.add_theme_font_size_override("normal_font_size", 4)
 	t.add_theme_font_size_override("bold_font_size", 6)
+	t.add_theme_font_size_override("italics_font_size", 4)
+	t.add_theme_font_size_override("bold_italics_font_size", 6)
 	padre.add_child(t)
 	t.anchor_left = 0
 	t.anchor_top = 0
@@ -211,8 +229,43 @@ func _crear_boton(padre: Control, texto: String, izquierda: bool) -> Button:
 
 func _mostrar_pagina() -> void:
 	var item: Dictionary = paginas[indice]
-	if item["tipo"] == "orbita":
-		var izq := "[i]Telemetría Orbital %d de %d[/i]\n" % [indice + 1, orbitas.size()]
+	
+	if item["tipo"] == "mision":
+		var m: Dictionary = GmatManager.mision_actual
+		
+		if m.is_empty():
+			imagen_izq.visible = false
+			texto_izq.text = "[i]Flight Manual - Page 1[/i]\n\n[b]No Active Mission[/b]\n\nVisit the Mission Control terminal to select and accept an assignment."
+			texto_der.text = "[b]Flight Checklist[/b]\n\n1. Accept a Mission\n2. Calibrate GMAT Orbit\n3. Build Vessel & Rocket\n4. Assign Crew\n5. Launch"
+		else:
+			# Hoja izquierda: Título y la imagen de la misión elegida
+			var izq := "[i]Active Mission Briefing[/i]\n"
+			izq += "[b]%s[/b]\n" % m.get("nombre", "Unknown Mission")
+			izq += "[i]Target: %s[/i]" % m.get("destino", "Unknown")
+			texto_izq.text = izq
+			
+			var tex_mision: Texture2D = m.get("imagen_gmat", null)
+			if tex_mision != null:
+				imagen_izq.texture = tex_mision
+				imagen_izq.visible = true
+			else:
+				imagen_izq.visible = false
+			
+			# Hoja derecha: Pistas de la misión y telemetría actual
+			var p: Dictionary = GmatManager.parametros_jugador
+			var der := "%s\n\n" % m.get("pista", "")
+			der += "[b]Current GMAT Telemetry[/b]\n"
+			if p.is_empty():
+				der += "Not calibrated yet. Compare the ground track on the left with the next pages."
+			else:
+				der += "• [b]Altitude:[/b] %.0f km\n" % p.get("altitud", 0.0)
+				der += "• [b]Inclination:[/b] %.1f°\n" % p.get("inclination", 0.0)
+				der += "• [b]Circularity:[/b] %d%%" % int(p.get("circularity", 0))
+			texto_der.text = der
+
+	elif item["tipo"] == "orbita":
+		var num_orbita := indice
+		var izq := "[i]Orbital Telemetry %d of %d[/i]\n" % [num_orbita, orbitas.size()]
 		izq += "[b]%s[/b]" % item["nombre"]
 		texto_izq.text = izq
 
@@ -221,22 +274,26 @@ func _mostrar_pagina() -> void:
 			imagen_izq.visible = true
 		else:
 			imagen_izq.visible = false
-			texto_izq.text += "\n\n[i](Falta asignar imagen: %s)[/i]" % item["imagen"]
-		var der := "[b]¿Cómo se ve el gráfico?[/b]\n%s\n\n" % item["patron"]
-		der += "[b]Rangos aproximados:[/b]\n%s\n\n" % item["rangos"]
-		der += "[b]Clave de lectura:[/b]\n%s" % item["tip"]
+			texto_izq.text += "\n\n[i](Missing image: %s)[/i]" % item["imagen"]
+			
+		var der := "[b]Ground Track Pattern[/b]\n%s\n\n" % item["patron"]
+		der += "[b]Approximate Ranges:[/b]\n%s\n\n" % item["rangos"]
+		der += "[b]Reading Key:[/b]\n%s" % item["tip"]
 		texto_der.text = der
+
 	else:
 		imagen_izq.visible = false
-		var num_falla := indice - orbitas.size() + 1
-		var izq := "[i]Problema %d de %d[/i]\n\n" % [num_falla, fallas.size()]
+		var num_falla := indice - orbitas.size()
+		var izq := "[i]Failure Guide %d of %d[/i]\n\n" % [num_falla, fallas.size()]
 		izq += "[b]%s[/b]\n\n" % item["nombre"]
-		izq += "[b]Probabilidad de falla:[/b] %s %%\n\n" % item["prob"]
-		izq += "[b]¿Por qué pasa?[/b]\n%s\n\n" % item["causa"]
-		izq += "[b]Caso real:[/b]\n%s" % item["caso"]
+		izq += "[b]Failure Risk:[/b] %s %%\n\n" % item["prob"]
+		izq += "[b]Root Cause:[/b]\n%s\n\n" % item["causa"]
+		izq += "[b]Historical Case:[/b]\n%s" % item["caso"]
 		texto_izq.text = izq
-		var der := "[b]Cómo solucionarlo[/b]\n\n%s" % item["solucion"]
+		
+		var der := "[b]How to Prevent It[/b]\n\n%s" % item["solucion"]
 		texto_der.text = der
+
 	btn_prev.disabled = (indice == 0)
 	btn_next.disabled = (indice == paginas.size() - 1)
 

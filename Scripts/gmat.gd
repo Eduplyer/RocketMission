@@ -42,10 +42,10 @@ func obtener_datos_para_calculo() -> Dictionary:
 
 
 func _on_button_pressed() -> void:
-	obtener_datos_para_calculo()
+	var datos:=obtener_datos_para_calculo()
+	GmatManager.registrar_y_evaluar(datos)
 	hide()
 	
-
 
 func _on_close_pressed() -> void:
 	hide()
