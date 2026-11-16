@@ -1,213 +1,226 @@
 {
-  "meta": {
-	"version": 1,
-	"modulo": "control_actitud",
-	"moneda": "credits",
-	"unidad_masa_kg": 5,
-	"convenciones": {
-	  "watts": "positive = generates power, negative = consumes power",
-	  "capacidad_wh": "batteries only (energy storage in watt-hours); 0 for everything else",
-	  "slots": "fairing slots: how much space the part takes inside the rocket's payload fairing",
-	  "calor": "heat the part gives off, scale 0-10 (low=2, medium=4, high=7, extreme=10; 0 = none)",
-	  "requiere": "ALL ids in the list must be on the ship",
-	  "requiere_alguno_de": "at least ONE id in the list must be on the ship",
-	  "incompatible": "the listed ids cannot be combined with this part",
-	  "sinergia": "ids of parts or mission-objective tags (e.g. mapeo_orbital) that give a bonus",
-	  "vulnerable_a": "ids of events that damage the part (see eventos_sugeridos)",
-	  "penalizaciones": "list of rules. {si_falta: id} or {si_falta_ninguno_de: [ids]}; if the condition is not met, 'efecto' applies",
-	  "ids": "lowercase, no accents, underscores. Must match the key. Must be identical across all team files",
-	  "tags": "capabilities of the part. A mission can require a tag (any part with it will do) or a specific id",
-	  "alcance_ua_max": "optional (antennas): maximum communication distance in astronomical units (AU)",
-	  "solo_mision": "optional: 'humana' (crewed) or 'robotica' (robotic). The part only applies to that mission type",
-	  "requiere_aterrizaje": "optional: true = only works if the mission includes a landing (aterrizaje=true in missions.json)",
-	  "mitiga": "optional: ids of events whose damage the part reduces or cancels",
-	  "ciencia_base": "optional (instruments): science points per use turn. Game value",
-	  "capacidad_slots": "fairings only: slots offered",
-	  "aporta_capacidad_masa": "engines and boosters only: adds to lift capacity (game units)",
-	  "ajuste_capacidad_masa": "modifier (+/-) to lift capacity",
-	  "masa_cuenta_como_carga": "if false, its mass does not count as load to lift (default true)",
-	  "fiabilidad": "probability of working (0 to 1)",
-	  "genera_evento": "event the part triggers",
-	  "isp_vacio_real_s": "real specific impulse in vacuum (s); informational only",
-	  "resumen": "short one-line text shown in the hover tooltip"
+	"meta": {
+		"version": 1,
+		"modulo": "control_actitud",
+		"moneda": "credits",
+		"unidad_masa_kg": 5,
+		"convenciones": {
+			"watts": "positive = generates power, negative = consumes power",
+			"capacidad_wh": "batteries only (energy storage in watt-hours); 0 for everything else",
+			"slots": "fairing slots: how much space the part takes inside the rocket's payload fairing",
+			"calor": "heat the part gives off, scale 0-10 (low=2, medium=4, high=7, extreme=10; 0 = none)",
+			"requiere": "ALL ids in the list must be on the ship",
+			"requiere_alguno_de": "at least ONE id in the list must be on the ship",
+			"incompatible": "the listed ids cannot be combined with this part",
+			"sinergia": "ids of parts or mission-objective tags (e.g. mapeo_orbital) that give a bonus",
+			"vulnerable_a": "ids of events that damage the part (see eventos_sugeridos)",
+			"penalizaciones": "list of rules. {si_falta: id} or {si_falta_ninguno_de: [ids]}; if the condition is not met, 'efecto' applies",
+			"ids": "lowercase, no accents, underscores. Must match the key. Must be identical across all team files",
+			"tags": "capabilities of the part. A mission can require a tag (any part with it will do) or a specific id",
+			"alcance_ua_max": "optional (antennas): maximum communication distance in astronomical units (AU)",
+			"solo_mision": "optional: 'humana' (crewed) or 'robotica' (robotic). The part only applies to that mission type",
+			"requiere_aterrizaje": "optional: true = only works if the mission includes a landing (aterrizaje=true in missions.json)",
+			"mitiga": "optional: ids of events whose damage the part reduces or cancels",
+			"ciencia_base": "optional (instruments): science points per use turn. Game value",
+			"capacidad_slots": "fairings only: slots offered",
+			"aporta_capacidad_masa": "engines and boosters only: adds to lift capacity (game units)",
+			"ajuste_capacidad_masa": "modifier (+/-) to lift capacity",
+			"masa_cuenta_como_carga": "if false, its mass does not count as load to lift (default true)",
+			"fiabilidad": "probability of working (0 to 1)",
+			"genera_evento": "event the part triggers",
+			"isp_vacio_real_s": "real specific impulse in vacuum (s); informational only",
+			"resumen": "short one-line text shown in the hover tooltip",
+			"tipo_combustible": "propellant the part burns or stores",
+			"masa_combustible_incluida": "ship tanks only: how many mass units of the part's own 'masa' are propellant (already counted in masa)"
+		},
+		"eventos_sugeridos": [
+			"cme",
+			"erupcion_solar",
+			"ips",
+			"meteoritos",
+			"radiacion",
+			"sep",
+			"tormenta_geomagnetica",
+			"vibracion_lanzamiento"
+		],
+		"regla_distancia_solar": "real_power = watts * (1 / distance_in_AU^2). Mars (~1.5 AU) gets about 43% of Earth's sunlight, Jupiter (~5.2 AU) about 4%. Only applies to parts with depende_del_sol = true.",
+		"fuentes": [
+			"https://www.nasa.gov/smallsat-institute/sst-soa/power-subsystems",
+			"https://www.jpl.nasa.gov/news/press_kits/mars_2020/launch/mission/spacecraft/power/",
+			"https://www.nasa.gov/sites/default/files/files/4_Mars_2020_MMRTG.pdf",
+			"https://www.nasa.gov/missions/station/iss-research/power-up-roll-out-solar-arrays-boost-space-station-power-supply/",
+			"https://ntrs.nasa.gov/api/citations/20030006444/downloads/20030006444.pdf",
+			"https://ntrs.nasa.gov/api/citations/19720014170/downloads/19720014170.pdf",
+			"https://www.nap.edu/read/2351/chapter/5",
+			"https://www1.grc.nasa.gov/beginners-guide-to-aeronautics/specific-impulse"
+		],
+		"supuestos": [
+			"Heat level and TRL of the star tracker were not in the original table: assumed 2 and 9.",
+			"Hydrazine Isp set to 220 s (game value): NASA's electrothermal hydrazine thruster spec asks for over 200 s steady-state; delivered values reported are about 230 s (NRC) and 223-229 s (Aerojet MR-107V).",
+			"The ship's hydrazine (2 of the tank's 3 mass units) is already inside the tank's mass. It gives roughly 100-430 m/s of ship delta-v for corrections and wheel unloading, never the main transfer burn."
+		],
+		"ids_pendientes": [],
+		"idioma": "en"
 	},
-	"eventos_sugeridos": [
-	  "cme",
-	  "erupcion_solar",
-	  "ips",
-	  "meteoritos",
-	  "radiacion",
-	  "sep",
-	  "tormenta_geomagnetica",
-      "vibracion_lanzamiento"
-	],
-	"regla_distancia_solar": "real_power = watts * (1 / distance_in_AU^2). Mars (~1.5 AU) gets about 43% of Earth's sunlight, Jupiter (~5.2 AU) about 4%. Only applies to parts with depende_del_sol = true.",
-	"fuentes": [
-	  "https://www.nasa.gov/smallsat-institute/sst-soa/power-subsystems",
-	  "https://www.jpl.nasa.gov/news/press_kits/mars_2020/launch/mission/spacecraft/power/",
-	  "https://www.nasa.gov/sites/default/files/files/4_Mars_2020_MMRTG.pdf",
-	  "https://www.nasa.gov/missions/station/iss-research/power-up-roll-out-solar-arrays-boost-space-station-power-supply/",
-      "https://ntrs.nasa.gov/api/citations/20030006444/downloads/20030006444.pdf"
-	],
-	"supuestos": [
-      "Heat level and TRL of the star tracker were not in the original table: assumed 2 and 9."
-	],
-	"ids_pendientes": [],
-	"idioma": "en"
-  },
-  "partes": {
-	"rueda_reaccion": {
-	  "id": "rueda_reaccion",
-	  "nombre": "Reaction wheel",
-	  "categoria": "control_actitud",
-	  "subcategoria": "actuador",
-	  "descripcion": "A spinning electric rotor. When it speeds up or slows down, the spacecraft turns the opposite way, because angular momentum is conserved. It lets a ship rotate in a vacuum without burning any fuel.",
-	  "resumen": "Turns the ship without fuel.",
-	  "precio_juego": 150000,
-	  "precio_real_ref": "From about 4,100 EUR (CubeSat, NanoAvionics); about 4,800 USD estimated (Georgia Tech student project). Wheels for large spacecraft cost far more",
-	  "masa": 2,
-	  "masa_real_ref": "No verified data",
-	  "watts": -15,
-	  "capacidad_wh": 0,
-	  "slots": 1,
-	  "calor": 4,
-	  "trl": 9,
-	  "tags": [
-		"controla_actitud",
-        "orienta_sin_combustible"
-	  ],
-	  "depende_del_sol": false,
-	  "degradacion_anual_pct": 0,
-	  "requiere": [],
-	  "requiere_alguno_de": [],
-	  "incompatible": [],
-	  "sinergia": [
-		"camara_optica",
-		"antena_alta_ganancia",
-        "sensor_estrellas"
-	  ],
-	  "vulnerable_a": [],
-	  "penalizaciones": [
-		{
-		  "si_falta": "propulsor_rcs",
-		  "efecto": "ruedas_saturadas_sin_descarga"
+	"partes": {
+		"rueda_reaccion": {
+			"id": "rueda_reaccion",
+			"nombre": "Reaction wheel",
+			"categoria": "control_actitud",
+			"subcategoria": "actuador",
+			"descripcion": "A spinning electric rotor. When it speeds up or slows down, the spacecraft turns the opposite way, because angular momentum is conserved. It lets a ship rotate in a vacuum without burning any fuel.",
+			"resumen": "Turns the ship without fuel.",
+			"precio_juego": 150000,
+			"precio_real_ref": "From about 4,100 EUR (CubeSat, NanoAvionics); about 4,800 USD estimated (Georgia Tech student project). Wheels for large spacecraft cost far more",
+			"masa": 2,
+			"masa_real_ref": "No verified data",
+			"watts": -15,
+			"capacidad_wh": 0,
+			"slots": 1,
+			"calor": 4,
+			"trl": 9,
+			"tags": [
+				"controla_actitud",
+				"orienta_sin_combustible"
+			],
+			"depende_del_sol": false,
+			"degradacion_anual_pct": 0,
+			"requiere": [],
+			"requiere_alguno_de": [],
+			"incompatible": [],
+			"sinergia": [
+				"camara_optica",
+				"antena_alta_ganancia",
+				"sensor_estrellas"
+			],
+			"vulnerable_a": [],
+			"penalizaciones": [
+				{
+					"si_falta": "propulsor_rcs",
+					"efecto": "ruedas_saturadas_sin_descarga"
+				}
+			],
+			"efecto_juego": "Points the ship without using fuel, but wheels eventually saturate (reach their top speed) and need thrusters to shed the accumulated spin.",
+			"notas": "Real wheels store between 0.04 and 45 Nms of angular momentum (NASA S3VI)."
+		},
+		"propulsor_rcs": {
+			"id": "propulsor_rcs",
+			"nombre": "RCS thruster (attitude control)",
+			"categoria": "control_actitud",
+			"subcategoria": "actuador",
+			"descripcion": "Small rocket engines that fire a puff of monopropellant (a single liquid fuel that decomposes over a catalyst) to push or turn the spacecraft.",
+			"resumen": "Small jets to turn and fix the orbit.",
+			"precio_juego": 80000,
+			"precio_real_ref": "About 50,000 USD (Georgia Tech student CubeSat project; not NASA data)",
+			"masa": 1,
+			"masa_real_ref": "No verified data",
+			"watts": -5,
+			"capacidad_wh": 0,
+			"slots": 0,
+			"calor": 2,
+			"trl": 9,
+			"tags": [
+				"controla_actitud",
+				"corrige_orbita",
+				"usa_propelente"
+			],
+			"depende_del_sol": false,
+			"degradacion_anual_pct": 0,
+			"requiere": [
+				"tanque_monopropelente"
+			],
+			"requiere_alguno_de": [],
+			"incompatible": [],
+			"sinergia": [
+				"tanque_monopropelente",
+				"rueda_reaccion"
+			],
+			"vulnerable_a": [],
+			"penalizaciones": [],
+			"efecto_juego": "Lets the ship correct its orbit, for example after a geomagnetic storm, and unload the reaction wheels.",
+			"notas": "Mounted outside the ship (0 slots).",
+			"tipo_combustible": "hydrazine (N2H4)",
+			"isp_vacio_real_s": 220
+		},
+		"tanque_monopropelente": {
+			"id": "tanque_monopropelente",
+			"nombre": "Monopropellant tank (hydrazine)",
+			"categoria": "control_actitud",
+			"subcategoria": "almacen",
+			"descripcion": "A tank of hydrazine, the fuel for the RCS thrusters.",
+			"resumen": "Thruster fuel. Freezes when cold.",
+			"precio_juego": 50000,
+			"precio_real_ref": "No reliable price data found",
+			"masa": 3,
+			"masa_real_ref": "No verified data",
+			"watts": 0,
+			"capacidad_wh": 0,
+			"slots": 1,
+			"calor": 2,
+			"trl": 9,
+			"tags": [
+				"almacena_propelente"
+			],
+			"depende_del_sol": false,
+			"degradacion_anual_pct": 0,
+			"requiere": [],
+			"requiere_alguno_de": [],
+			"incompatible": [],
+			"sinergia": [
+				"propulsor_rcs"
+			],
+			"vulnerable_a": [],
+			"penalizaciones": [
+				{
+					"si_falta_ninguno_de": [
+						"calentador_electrico",
+						"aislante_mli"
+					],
+					"efecto": "hidracina_se_congela_en_frio"
+				}
+			],
+			"efecto_juego": "If the Temperature drops to Freezing, the hydrazine freezes and the thrusters fail.",
+			"notas": "NASA documents a hydrazine freezing risk at roughly 0.1-1.6 C; it is reduced with heaters and insulation: nasa.gov/general/risk-of-hydrazine-use-following-freeze-thaw-exposure Of its 3 mass units, 2 are hydrazine.",
+			"tipo_combustible": "hydrazine (N2H4)",
+			"isp_vacio_real_s": 220,
+			"masa_combustible_incluida": 2,
+			"combustible_real_ref": "Hydrazine monopropellant: about 220-230 s delivered (NASA NTRS 19720014170 spec: over 200 s; NRC: about 230 s). Real small tanks hold about 80 kg (ArianeGroup PM25, not NASA)"
+		},
+		"sensor_estrellas": {
+			"id": "sensor_estrellas",
+			"nombre": "Star tracker",
+			"categoria": "control_actitud",
+			"subcategoria": "sensor",
+			"descripcion": "A small camera that recognizes star patterns and compares them with a built-in catalog to work out exactly where the spacecraft is pointing.",
+			"resumen": "Finds where it points by reading the stars.",
+			"precio_juego": 200000,
+			"precio_real_ref": "No reliable price data found",
+			"masa": 1,
+			"masa_real_ref": "No verified data",
+			"watts": -10,
+			"capacidad_wh": 0,
+			"slots": 0,
+			"calor": 2,
+			"trl": 9,
+			"tags": [
+				"apunta_con_precision"
+			],
+			"depende_del_sol": false,
+			"degradacion_anual_pct": 0,
+			"requiere": [],
+			"requiere_alguno_de": [
+				"rueda_reaccion",
+				"propulsor_rcs"
+			],
+			"incompatible": [],
+			"sinergia": [
+				"camara_optica",
+				"antena_alta_ganancia"
+			],
+			"vulnerable_a": [],
+			"penalizaciones": [],
+			"efecto_juego": "Greatly increases the scientific accuracy of the cameras and lets the high-gain antenna aim precisely.",
+			"notas": "Heat level and TRL were not in the original table; assumed (heat 2, TRL 9)."
 		}
-	  ],
-	  "efecto_juego": "Points the ship without using fuel, but wheels eventually saturate (reach their top speed) and need thrusters to shed the accumulated spin.",
-	  "notas": "Real wheels store between 0.04 and 45 Nms of angular momentum (NASA S3VI)."
-	},
-	"propulsor_rcs": {
-	  "id": "propulsor_rcs",
-	  "nombre": "RCS thruster (attitude control)",
-	  "categoria": "control_actitud",
-	  "subcategoria": "actuador",
-	  "descripcion": "Small rocket engines that fire a puff of monopropellant (a single liquid fuel that decomposes over a catalyst) to push or turn the spacecraft.",
-	  "resumen": "Small jets to turn and fix the orbit.",
-	  "precio_juego": 80000,
-	  "precio_real_ref": "About 50,000 USD (Georgia Tech student CubeSat project; not NASA data)",
-	  "masa": 1,
-	  "masa_real_ref": "No verified data",
-	  "watts": -5,
-	  "capacidad_wh": 0,
-	  "slots": 0,
-	  "calor": 2,
-	  "trl": 9,
-	  "tags": [
-		"controla_actitud",
-		"corrige_orbita",
-        "usa_propelente"
-	  ],
-	  "depende_del_sol": false,
-	  "degradacion_anual_pct": 0,
-	  "requiere": [
-        "tanque_monopropelente"
-	  ],
-	  "requiere_alguno_de": [],
-	  "incompatible": [],
-	  "sinergia": [
-		"tanque_monopropelente",
-        "rueda_reaccion"
-	  ],
-	  "vulnerable_a": [],
-	  "penalizaciones": [],
-	  "efecto_juego": "Lets the ship correct its orbit, for example after a geomagnetic storm, and unload the reaction wheels.",
-	  "notas": "Mounted outside the ship (0 slots)."
-	},
-	"tanque_monopropelente": {
-	  "id": "tanque_monopropelente",
-	  "nombre": "Monopropellant tank (hydrazine)",
-	  "categoria": "control_actitud",
-	  "subcategoria": "almacen",
-	  "descripcion": "A tank of hydrazine, the fuel for the RCS thrusters.",
-	  "resumen": "Thruster fuel. Freezes when cold.",
-	  "precio_juego": 50000,
-	  "precio_real_ref": "No reliable price data found",
-	  "masa": 3,
-	  "masa_real_ref": "No verified data",
-	  "watts": 0,
-	  "capacidad_wh": 0,
-	  "slots": 1,
-	  "calor": 2,
-	  "trl": 9,
-	  "tags": [
-        "almacena_propelente"
-	  ],
-	  "depende_del_sol": false,
-	  "degradacion_anual_pct": 0,
-	  "requiere": [],
-	  "requiere_alguno_de": [],
-	  "incompatible": [],
-	  "sinergia": [
-        "propulsor_rcs"
-	  ],
-	  "vulnerable_a": [],
-	  "penalizaciones": [
-		{
-		  "si_falta_ninguno_de": [
-			"calentador_electrico",
-            "aislante_mli"
-		  ],
-		  "efecto": "hidracina_se_congela_en_frio"
-		}
-	  ],
-	  "efecto_juego": "If the Temperature drops to Freezing, the hydrazine freezes and the thrusters fail.",
-	  "notas": "NASA documents a hydrazine freezing risk at roughly 0.1-1.6 C; it is reduced with heaters and insulation: nasa.gov/general/risk-of-hydrazine-use-following-freeze-thaw-exposure"
-	},
-	"sensor_estrellas": {
-	  "id": "sensor_estrellas",
-	  "nombre": "Star tracker",
-	  "categoria": "control_actitud",
-	  "subcategoria": "sensor",
-	  "descripcion": "A small camera that recognizes star patterns and compares them with a built-in catalog to work out exactly where the spacecraft is pointing.",
-	  "resumen": "Finds where it points by reading the stars.",
-	  "precio_juego": 200000,
-	  "precio_real_ref": "No reliable price data found",
-	  "masa": 1,
-	  "masa_real_ref": "No verified data",
-	  "watts": -10,
-	  "capacidad_wh": 0,
-	  "slots": 0,
-	  "calor": 2,
-	  "trl": 9,
-	  "tags": [
-        "apunta_con_precision"
-	  ],
-	  "depende_del_sol": false,
-	  "degradacion_anual_pct": 0,
-	  "requiere": [],
-	  "requiere_alguno_de": [
-		"rueda_reaccion",
-        "propulsor_rcs"
-	  ],
-	  "incompatible": [],
-	  "sinergia": [
-		"camara_optica",
-        "antena_alta_ganancia"
-	  ],
-	  "vulnerable_a": [],
-	  "penalizaciones": [],
-	  "efecto_juego": "Greatly increases the scientific accuracy of the cameras and lets the high-gain antenna aim precisely.",
-	  "notas": "Heat level and TRL were not in the original table; assumed (heat 2, TRL 9)."
 	}
-  }
 }
