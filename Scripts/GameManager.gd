@@ -26,6 +26,7 @@ signal estado_actualizado(probabilidad_exito: float, riesgo_total: float)
 signal lanzamiento_finalizado(resultado: Dictionary)
 
 
+
 # --- ATAJO DE PRUEBA (TECLA F8) ---
 func _unhandled_input(event: InputEvent) -> void:
 	if not debug_tecla_activa:
@@ -86,7 +87,30 @@ func registrar_nave(riesgo_calculado: float, descripcion_fallo: String = "", dat
 	detalle_nave = descripcion_fallo if descripcion_fallo != "" else "Configuración nominal"
 	cohete_listo = false
 	_notificar_cambio()
+var teletransporte_pendiente: bool = false
+var posicion_destino_player: Vector2 = Vector2.ZERO
 
+func solicitar_teletransporte_player(pos: Vector2) -> void:
+	posicion_destino_player = pos
+	teletransporte_pendiente = true
+	_intentar_teletransportar_player()
+
+func _process(_delta: float) -> void:
+	if teletransporte_pendiente:
+		_intentar_teletransportar_player()
+
+func _intentar_teletransportar_player() -> void:
+	var escena := get_tree().current_scene
+	if escena == null:
+		return
+	var player: Node2D = escena.find_child("main_character", true, false) as Node2D
+	if player == null:
+		player = escena.find_child("MainCharacter", true, false) as Node2D
+	if player == null:
+		player = get_tree().get_first_node_in_group("player") as Node2D
+	if player:
+		player.global_position = posicion_destino_player
+		teletransporte_pendiente = false
 
 func registrar_cohete(riesgo_calculado: float, descripcion_fallo: String = "", datos: Dictionary = {}) -> void:
 	cohete_listo = true

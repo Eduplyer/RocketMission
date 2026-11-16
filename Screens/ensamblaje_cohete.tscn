@@ -1,4 +1,4 @@
-[gd_scene load_steps=4 format=3 uid="uid://brad3ivxojblf"]
+[gd_scene load_steps=4 format=3 uid="uid://b6ew53gudxej5"]
 
 [ext_resource type="Script" uid="uid://dir7wf2bh0to" path="res://Screens/ensamblaje.gd" id="1_ufnvl"]
 [ext_resource type="Texture2D" uid="uid://0qxldi7hnos5" path="res://Assets/junto.png" id="2_ufnvl"]
@@ -12,6 +12,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_ufnvl")
+escena_siguiente = "uid://cjeguv1crf7ol"
 
 [node name="Panel" type="Panel" parent="."]
 layout_mode = 1

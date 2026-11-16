@@ -522,7 +522,6 @@ func _on_atras() -> void:
 
 
 # ---------- Crear el cohete ----------
-
 func _on_lanzar() -> void:
 	if construyendo:
 		return
@@ -543,13 +542,27 @@ func _on_lanzar() -> void:
 	_mostrar_mensaje(_s("built_title"), _texto_exito(t), true, 0.0)
 	await get_tree().create_timer(DURACION_MENSAJE).timeout
 	mensaje.hide()
-	if escena_siguiente != "":
+	construyendo = false
+	actualizar_resumen()
+
+	# Deja programado el teletransporte de main_character a (860, 160)
+	GameManager.solicitar_teletransporte_player(Vector2(845, 160))
+
+	# Si space_center sigue cargado detrás (en GUI), solo oculta el panel;
+	# si se descargó al cambiar de escena, vuelve a cargar space_center.tscn.
+	var escena_actual := get_tree().current_scene
+	var player_en_escena := escena_actual != null and (
+		escena_actual.find_child("main_character", true, false) != null or
+		escena_actual.find_child("MainCharacter", true, false) != null or
+		get_tree().get_first_node_in_group("player") != null
+	)
+
+	if player_en_escena:
+		hide()
+	elif escena_siguiente != "":
 		get_tree().change_scene_to_file(escena_siguiente)
 	else:
-		construyendo = false
-		actualizar_resumen()     # vuelve a habilitar el botón
-
-
+		push_error("Asigna 'space_center.tscn' en la propiedad 'Escena Siguiente' del Inspector.")
 # Guarda el lanzamiento (con la nave adentro, para que la etapa siguiente solo lea este archivo)
 # y lo registra en GameState como la misión lista.
 func guardar_cohete() -> Dictionary:

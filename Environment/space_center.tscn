@@ -248,7 +248,6 @@ texture = ExtResource("19_mhqf2")
 [node name="launch" parent="." instance=ExtResource("3_j6mix")]
 position = Vector2(1323, 134)
 script = ExtResource("9_fw6d5")
-escena_eventos = "res://Screens/space_screen.tscn"
 
 [node name="Sprite2D" type="Sprite2D" parent="launch"]
 scale = Vector2(0.75, 0.75)
