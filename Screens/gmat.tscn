@@ -68,6 +68,7 @@ horizontal_alignment = 1
 layout_mode = 2
 theme_override_colors/up_icon_modulate = Color(0, 0, 0, 1)
 theme_override_colors/down_icon_modulate = Color(0, 0, 0, 1)
+max_value = 500000.0
 
 [node name="LabelInclination" type="Label" parent="Panel/VBoxContainer"]
 layout_mode = 2

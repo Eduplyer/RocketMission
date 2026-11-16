@@ -285,7 +285,7 @@ func _preparar_eventos_desde_json() -> void:
 
 
 func _iniciar_vuelo() -> void:
-	integridad = 100
+	integridad = GameManager.obtener_integridad_inicial()
 	fallos_cometidos = 0
 	indice_evento_actual = 0
 	tiempo_vuelo = 0.0
@@ -401,7 +401,20 @@ func _activar_win() -> void:
 		"fallos": fallos_cometidos,
 		"progreso": 100.0
 	}
+	
+	# Guarda el reporte en GameManager si ya agregaste esa función
+	if GameManager.has_method("registrar_resultado_final"):
+		GameManager.registrar_resultado_final(true, "", resumen)
+		
 	mision_completada.emit(resumen)
 	print("[SpaceScreen] MISSION ACCOMPLISHED -> ", resumen)
+	
+	# 1. Primero muestra el texto en el HUD
 	label_hud.text = "MISSION ACCOMPLISHED! INTEGRITY: %d%%" % integridad
 	label_hud.add_theme_color_override("font_color", Color(0.3, 1.0, 0.4))
+	
+	# 2. Espera 1.5 segundos para que se lea y cambia a la escena Win
+	await get_tree().create_timer(1.5).timeout
+	var err := get_tree().change_scene_to_file("res://Screens/win.tscn")
+	if err != OK:
+		push_error("No se pudo abrir res://Screens/win.tscn. Verifica que la ruta y mayúsculas coincidan.")

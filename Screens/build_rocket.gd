@@ -117,6 +117,12 @@ func _ready() -> void:
 	preparar_pestanas()
 	preparar_barras()
 	preparar_boton_construir()
+	if GmatManager and not GmatManager.mision_actual.is_empty():
+		var nombre_m: String = GmatManager.mision_actual.get("nombre", "")
+		# Todas tus misiones actuales llevan tripulación ("Test life support", "Crewed loop", "Crew transfer")
+		tipo_mision = "humana"
+		if "Minerva" in nombre_m:
+			aterrizaje = false
 	# Si el jugador ya había elegido piezas (y volvió "atrás"), se recuperan; si no, empieza de cero.
 	if not _restaurar_borrador():
 		configurar_mision(tipo_mision, aterrizaje)
@@ -475,6 +481,7 @@ func guardar_nave() -> Dictionary:
 		"version": 1,
 		"tipo_mision": tipo_mision,
 		"aterrizaje": aterrizaje,
+		"destino": "luna_sobrevuelo" if "Minerva" in GmatManager.mision_actual.get("nombre", "") else "orbita_baja",
 		"piezas": seleccionadas.duplicate(),
 		"totales": {
 			"masa": tot["masa"],                      # unidades del juego
@@ -872,4 +879,16 @@ func validar(ids: Array) -> Dictionary:
 						falta = false
 			if falta:
 				avisos.append("%s: %s" % [p["nombre"], String(pe["efecto"]).replace("_", " ")])
+	# Exigir subsistemas vitales mínimos para cualquier nave espacial
+	var categorias_presentes := {}
+	for id in ids:
+		categorias_presentes[piezas[id]["categoria"]] = true
+
+	var obligatorias := ["potencia", "control_actitud", "comunicaciones"]
+	if tipo_mision == "humana":
+		obligatorias.append("soporte_vital")
+
+	for cat in obligatorias:
+		if not categorias_presentes.has(cat):
+			errores.append("Missing subsystem: " + NOMBRES_CATEGORIA[cat])
 	return {"errores": errores, "avisos": avisos}
