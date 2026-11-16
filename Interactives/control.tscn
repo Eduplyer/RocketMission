@@ -1,0 +1,48 @@
+[gd_scene load_steps=2 format=3 uid="uid://d1827uw33xspn"]
+
+[ext_resource type="FontFile" uid="uid://cw0vs6wx5rdr" path="res://Assets/Kenney Pixel.ttf" id="1_0fbet"]
+
+[node name="FichaPrue1" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Label" type="Label" parent="."]
+layout_mode = 0
+offset_left = 98.0
+offset_right = 222.0
+offset_bottom = 23.0
+theme_override_fonts/font = ExtResource("1_0fbet")
+theme_override_font_sizes/font_size = 16
+text = "CHRISTINA HAMMOCK KOCH"
+
+[node name="Label2" type="Label" parent="."]
+texture_filter = 1
+layout_mode = 0
+offset_left = 1.0
+offset_top = 14.0
+offset_right = 321.0
+offset_bottom = 86.0
+theme_override_fonts/font = ExtResource("1_0fbet")
+theme_override_font_sizes/font_size = 16
+text = "Engineer and scientist with experience in space instruments, 
+extreme places, and long space missions. 
+She leads the crew. She holds the women’s record for the long-
+est time in space in one flight, and she was the first woman to 
+fly around the Moon."
+
+[node name="Label3" type="Label" parent="."]
+layout_mode = 0
+offset_left = 1.0
+offset_top = 101.0
+offset_right = 319.0
+offset_bottom = 188.0
+theme_override_fonts/font = ExtResource("1_0fbet")
+text = "Education
+BS in Electrical Engineering and in Physics, North Carolina State 
+University (NC State)
+MS in Electrical Engineering, NC State
+Maestría en Ingeniería Eléctrica, NC State"
