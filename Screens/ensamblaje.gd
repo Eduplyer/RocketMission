@@ -763,9 +763,9 @@ func _crear_mensaje() -> void:
 	caja.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	mensaje.add_child(caja)
 	msg_titulo = _nueva_etiqueta(Color("b7f0c4"), 5)
-	msg_titulo.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	msg_titulo.custom_minimum_size.x = 100   # ancho fijo: el autowrap ya no empieza en 0
 	msg_texto = _nueva_etiqueta(Color("f2e6d8"), 3)
-	msg_texto.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	msg_texto.custom_minimum_size.x = 100
 	caja.add_child(msg_titulo)
 	caja.add_child(msg_texto)
 	mensaje.hide()
@@ -775,19 +775,23 @@ func _crear_mensaje() -> void:
 # segundos > 0: se oculta solo (para errores). segundos = 0: se queda hasta que se oculte por código.
 func _mostrar_mensaje(titulo: String, texto: String, exito: bool, segundos: float) -> void:
 	msg_id += 1
+	var mi_id := msg_id
 	msg_titulo.text = titulo
 	msg_texto.text = texto
 	msg_texto.visible = texto != ""
 	msg_estilo.border_color = COLOR_OK if exito else COLOR_MAL
 	msg_titulo.add_theme_color_override("font_color", Color("b7f0c4") if exito else Color("ff9d8a"))
-	mensaje.reset_size()
 	mensaje.modulate.a = 0.0
 	mensaje.show()
+	await get_tree().process_frame      # el layout se calcula con el ancho real
+	await get_tree().process_frame
+	if mi_id != msg_id:
+		return                          # llegó otro mensaje mientras esperábamos
+	mensaje.reset_size()
 	_centrar_mensaje()
-	var tw := create_tween()
-	tw.tween_property(mensaje, "modulate:a", 1.0, 0.15)
+	create_tween().tween_property(mensaje, "modulate:a", 1.0, 0.15)
 	if segundos > 0.0:
-		get_tree().create_timer(segundos).timeout.connect(_ocultar_mensaje_si.bind(msg_id))
+		get_tree().create_timer(segundos).timeout.connect(_ocultar_mensaje_si.bind(mi_id))
 
 
 func _ocultar_mensaje_si(id: int) -> void:

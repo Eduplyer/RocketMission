@@ -37,6 +37,17 @@ offset_top = 6.0
 offset_right = 282.0
 offset_bottom = 36.0
 
+[node name="Label" type="Label" parent="Panel/ColorRect"]
+layout_mode = 0
+offset_left = 114.0
+offset_top = -2.0
+offset_right = 185.0
+offset_bottom = 21.0
+theme_override_colors/font_color = Color(0.16099262, 0.12695295, 0.08382826, 1)
+theme_override_fonts/font = ExtResource("3_iol0s")
+theme_override_font_sizes/font_size = 18
+text = "1/2 · Ship"
+
 [node name="PanelNave" type="Panel" parent="Panel"]
 custom_minimum_size = Vector2(80, 80)
 layout_mode = 1
